@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public class RVBigCube extends RvStruct {
 
-	private RVVector center;
+	private RVVectorF center;
 
 	private float size;
 
@@ -24,7 +24,7 @@ public class RVBigCube extends RvStruct {
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		center = new RVVector();
+		center = new RVVectorF();
 		center.decode(buf);
 		size = buf.getFloat();
 		mesh_count = buf.getInt();
@@ -34,11 +34,11 @@ public class RVBigCube extends RvStruct {
 		}
 	}
 
-	public RVVector getCenter() {
+	public RVVectorF getCenter() {
 		return center;
 	}
 
-	public void setCenter(RVVector center) {
+	public void setCenter(RVVectorF center) {
 		this.center = center;
 	}
 

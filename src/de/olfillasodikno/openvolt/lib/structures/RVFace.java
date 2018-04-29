@@ -2,31 +2,22 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVVertex extends RvStruct {
+public class RVFace extends RvStruct {
 
-	private RVVectorF position;
 	private RVVectorF normal;
+	private float distance;
 
 	@Override
 	public void encode(ByteBuffer buf) {
-		position.encode(buf);
 		normal.encode(buf);
+		buf.putFloat(distance);
 	}
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		position = new RVVectorF();
-		position.decode(buf);
 		normal = new RVVectorF();
 		normal.decode(buf);
-	}
-
-	public RVVectorF getPosition() {
-		return position;
-	}
-
-	public void setPosition(RVVectorF position) {
-		this.position = position;
+		distance = buf.getFloat();
 	}
 
 	public RVVectorF getNormal() {
@@ -36,4 +27,13 @@ public class RVVertex extends RvStruct {
 	public void setNormal(RVVectorF normal) {
 		this.normal = normal;
 	}
+
+	public float getDistance() {
+		return distance;
+	}
+
+	public void setDistance(float distance) {
+		this.distance = distance;
+	}
+
 }

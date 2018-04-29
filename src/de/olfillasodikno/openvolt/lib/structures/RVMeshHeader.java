@@ -2,47 +2,27 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVMeshHeader extends RvStruct{
+public class RVMeshHeader extends RvStruct {
 
-	private RVVector bound_ball_center;
-	private float bound_ball_radius;
+	private RVSphere bound_ball;
 
 	private RVBoundingBox bbox;
-	
+
 	@Override
 	public void encode(ByteBuffer buf) {
-		bound_ball_center.encode(buf);
-		buf.putFloat(bound_ball_radius);
+		bound_ball.encode(buf);
 
 		bbox.encode(buf);
 	}
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		bound_ball_center = new RVVector();
-		bound_ball_center.decode(buf);
-
-		bound_ball_radius = buf.getFloat();
+		bound_ball = new RVSphere();
+		bound_ball.decode(buf);
 
 		bbox = new RVBoundingBox();
 		bbox.decode(buf);
 
-	}
-
-	public RVVector getBound_ball_center() {
-		return bound_ball_center;
-	}
-
-	public void setBound_ball_center(RVVector bound_ball_center) {
-		this.bound_ball_center = bound_ball_center;
-	}
-
-	public float getBound_ball_radius() {
-		return bound_ball_radius;
-	}
-
-	public void setBound_ball_radius(float bound_ball_radius) {
-		this.bound_ball_radius = bound_ball_radius;
 	}
 
 	public RVBoundingBox getBbox() {
@@ -52,4 +32,13 @@ public class RVMeshHeader extends RvStruct{
 	public void setBbox(RVBoundingBox bbox) {
 		this.bbox = bbox;
 	}
+
+	public RVSphere getBound_ball() {
+		return bound_ball;
+	}
+
+	public void setBound_ball(RVSphere bound_ball) {
+		this.bound_ball = bound_ball;
+	}
+
 }
