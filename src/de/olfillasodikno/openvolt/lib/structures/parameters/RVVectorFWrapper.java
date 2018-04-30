@@ -19,7 +19,7 @@ public class RVVectorFWrapper extends ParamWrapper<RVVectorF>{
 		Object x = data.get(0);
 		Object y = data.get(1);
 		Object z = data.get(2);
-		if(!(x instanceof Float && y instanceof Float && z instanceof Float)) {
+		if(!(x instanceof Float && y instanceof Float && z instanceof Float) && !(x instanceof Integer && y instanceof Integer && z instanceof Integer)) {
 			return false;
 		}
 		in.setX((float) x);
