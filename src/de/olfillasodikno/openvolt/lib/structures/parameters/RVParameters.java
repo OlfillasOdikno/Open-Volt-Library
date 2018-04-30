@@ -352,7 +352,7 @@ public class RVParameters {
 					}
 					f.setInt(instance, (int) val);
 				} else if (type.equals(float.class)) {
-					if (!(val instanceof Float)) {
+					if (!(val instanceof Float) && !(val instanceof Integer)) {
 						System.err.println("Invalid type for: " + key + " val: " + val);
 						return;
 					}

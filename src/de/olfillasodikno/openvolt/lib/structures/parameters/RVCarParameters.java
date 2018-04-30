@@ -142,7 +142,7 @@ public class RVCarParameters extends RVParameters {
 		private int model_num;
 
 		@Param("Offset")
-		private RVVectorI offset;
+		private RVVectorF offset;
 
 		@Param("Mass")
 		private float mass;
@@ -181,11 +181,11 @@ public class RVCarParameters extends RVParameters {
 			this.model_num = model_num;
 		}
 
-		public RVVectorI getOffset() {
+		public RVVectorF getOffset() {
 			return offset;
 		}
 
-		public void setOffset(RVVectorI offset) {
+		public void setOffset(RVVectorF offset) {
 			this.offset = offset;
 		}
 
