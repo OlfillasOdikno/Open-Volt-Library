@@ -38,8 +38,7 @@ public class RVVectorFWrapper extends ParamWrapper<RVVectorF> {
 		if (z instanceof Float) {
 			z = ((Float) z).floatValue();
 		}
-		if (!(x.getClass().equals(float.class) && y.getClass().equals(float.class)
-				&& z.getClass().equals(float.class))) {
+		if (!(x instanceof Float && y instanceof Float && z instanceof Float)) {
 			return false;
 		}
 
