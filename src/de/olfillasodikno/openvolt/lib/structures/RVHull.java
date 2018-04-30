@@ -35,4 +35,28 @@ public class RVHull extends RvStruct {
 		interior.decode(buf);
 	}
 
+	public short getConvex_hull_count() {
+		return convex_hull_count;
+	}
+
+	public void setConvex_hull_count(short convex_hull_count) {
+		this.convex_hull_count = convex_hull_count;
+	}
+
+	public RVConvexHull[] getConvex_hulls() {
+		return convex_hulls;
+	}
+
+	public void setConvex_hulls(RVConvexHull[] convex_hulls) {
+		this.convex_hulls = convex_hulls;
+	}
+
+	public RVInterior getInterior() {
+		return interior;
+	}
+
+	public void setInterior(RVInterior interior) {
+		this.interior = interior;
+	}
+
 }
