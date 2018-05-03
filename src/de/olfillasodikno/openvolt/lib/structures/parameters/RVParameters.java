@@ -38,7 +38,7 @@ public class RVParameters {
 		RawContext fileContext = new RawContext(null);
 		parseContext(lines, fileContext);
 		Context build = fileContext.build(null);
-		RVParameters param = new RVParameters(build.getSubcontexts().get(""));
+		RVParameters param = new RVParameters(build.getSubcontexts().get("").get(0));
 		return param;
 	}
 
@@ -168,15 +168,24 @@ public class RVParameters {
 				TypeObject<?> type = types.get(i);
 				if (type.getType() == Type.CONTEXT) {
 					RawContext raw = (RawContext) types.get(i).getObject();
-					StringBuilder sb = new StringBuilder();
+					ArrayList<TypeObject<?>> typeObjects = new ArrayList<>();
 					for (int j = lastName; j < i; j++) {
-						sb.append(types.get(j).getObject());
-						if (j != i - 1) {
-							sb.append(" ");
-						}
+						typeObjects.add(types.get(j));
 					}
-					String ctxName = sb.toString();
-					current.getSubcontexts().put(ctxName, raw.build(ctxName));
+					String ctxName = "";
+					if (typeObjects.size() > 0) {
+						ctxName = (String) typeObjects.get(0).object;
+					}
+					if (!current.getSubcontexts().containsKey(ctxName)) {
+						current.getSubcontexts().put(ctxName, new HashMap<>());
+					}
+
+					int key = 0;
+					if (typeObjects.size() > 1 && typeObjects.get(1).type == Type.INT) {
+						key = (int) typeObjects.get(1).object;
+					}
+
+					current.getSubcontexts().get(ctxName).put(key, raw.build(ctxName));
 				} else if ((type.getType() == Type.NAME || i == types.size() - 1) && name != null) {
 					TypeObject<?> descriptor = types.get(lastName);
 					if (descriptor.type != Type.NAME) {
@@ -205,7 +214,7 @@ public class RVParameters {
 	}
 
 	public static class Context {
-		private final HashMap<String, Context> subcontexts;
+		private final HashMap<String, HashMap<Integer, Context>> subcontexts;
 
 		private final HashMap<String, ArrayList<ArrayList<Object>>> objects;
 
@@ -225,7 +234,7 @@ public class RVParameters {
 			return objects;
 		}
 
-		public HashMap<String, Context> getSubcontexts() {
+		public HashMap<String, HashMap<Integer, Context>> getSubcontexts() {
 			return subcontexts;
 		}
 	}
@@ -234,12 +243,12 @@ public class RVParameters {
 	@Target(ElementType.FIELD)
 	protected @interface Param {
 		String value();
+
+		ParamType type() default ParamType.Normal;
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	protected @interface Con {
-		String value();
+	public static enum ParamType {
+		Normal, Contexts;
 	}
 
 	private static final HashMap<Class<?>, ParamWrapper<?>> wrappers = new HashMap<>();
@@ -259,10 +268,15 @@ public class RVParameters {
 
 	private void decodeContext(Context current, Class<?> clazz, Object instance) {
 		HashMap<String, Field> params = new HashMap<>();
+		HashMap<String, Field> contexts = new HashMap<>();
 		for (Field f : clazz.getDeclaredFields()) {
 			if (f.isAnnotationPresent(Param.class)) {
 				Param p = f.getAnnotation(Param.class);
-				params.put(p.value(), f);
+				if (p.type() == ParamType.Normal) {
+					params.put(p.value(), f);
+				} else if (p.type() == ParamType.Contexts) {
+					contexts.put(p.value(), f);
+				}
 			}
 		}
 		HashMap<String, ArrayList<ArrayList<Object>>> objects = current.getObjects();
@@ -311,21 +325,48 @@ public class RVParameters {
 				setField(key, f, instance, primitive, vals);
 			}
 		}
-		HashMap<String, Context> subcontexts = current.getSubcontexts();
-		for (Map.Entry<String, Context> entry : subcontexts.entrySet()) {
+		HashMap<String, HashMap<Integer, Context>> subcontexts = current.getSubcontexts();
+		for (Map.Entry<String, HashMap<Integer, Context>> entry : subcontexts.entrySet()) {
 			String key = entry.getKey();
-			if (!params.containsKey(key)) {
+			if (!contexts.containsKey(key)) {
 				continue;
 			}
-			try {
-				Field f = params.get(key);
-				Object o = f.getType().newInstance();
-				decodeContext(entry.getValue(), f.getType(), o);
-				f.setAccessible(true);
-				f.set(instance, o);
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-				continue;
+			Field f = contexts.get(key);
+			HashMap<Integer, Context> ctx = entry.getValue();
+			if (f.getType().isArray()) {
+				int max = 0;
+				for (Integer i : ctx.keySet()) {
+					if (i > max) {
+						max = i;
+					}
+				}
+				Object[] arr = (Object[]) Array.newInstance(f.getType().getComponentType(), max + 1);
+				for (Map.Entry<Integer, Context> con : ctx.entrySet()) {
+					try {
+						Object o = f.getType().getComponentType().newInstance();
+						decodeContext(con.getValue(), f.getType().getComponentType(), o);
+						arr[con.getKey()] = o;
+					} catch (InstantiationException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+				try {
+					f.setAccessible(true);
+					f.set(instance, arr);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			} else if (ctx.size() > 0) {
+				Context con = ctx.values().iterator().next();
+				try {
+					Object o = f.getType().newInstance();
+					decodeContext(con, f.getType(), o);
+					f.setAccessible(true);
+					f.set(instance, o);
+				} catch (InstantiationException | IllegalAccessException e) {
+					e.printStackTrace();
+					continue;
+				}
 			}
 		}
 	}
@@ -367,7 +408,7 @@ public class RVParameters {
 			if (wrappers.containsKey(type)) {
 				val = wrappers.get(type).wrap(vals);
 				if (val == null) {
-					System.err.println("Failed to wrap: " + key+" val: "+val);
+					System.err.println("Failed to wrap: " + key + " val: " + val);
 					return;
 				}
 			}
@@ -387,6 +428,7 @@ public class RVParameters {
 		File test = new File("parameters.txt");
 		RVCarParameters param = new RVCarParameters(RVParameters.fromFile(test).getRoot());
 		param.decode();
-		System.out.println("Name: "+param.getName());
+		System.out.println("Name: " + param.getName());
+		System.out.println(param.getWheels()[1].getModel_num());
 	}
 }

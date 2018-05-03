@@ -73,64 +73,28 @@ public class RVCarParameters extends RVParameters {
 	@Param("Weapon")
 	private RVVectorF weapon_offset;
 
-	@Param("BODY")
+	@Param(value = "BODY", type = ParamType.Contexts)
 	private BodyDetails body;
 
-	@Param("WHEEL 0")
-	private WheelDetails wheel_0;
+	@Param(value = "WHEEL", type = ParamType.Contexts)
+	private WheelDetails[] wheels;
 
-	@Param("WHEEL 1")
-	private WheelDetails wheel_1;
+	@Param(value = "SPRING", type = ParamType.Contexts)
+	private SpringDetails[] springs;
 
-	@Param("WHEEL 2")
-	private WheelDetails wheel_2;
+	@Param(value = "PIN", type = ParamType.Contexts)
+	private PinDetails[] pins;
 
-	@Param("WHEEL 3")
-	private WheelDetails wheel_3;
+	@Param(value = "AXLE", type = ParamType.Contexts)
+	private AxleDetails[] axles;
 
-	@Param("SPRING 0")
-	private SpringDetails spring_0;
-
-	@Param("SPRING 1")
-	private SpringDetails spring_1;
-
-	@Param("SPRING 2")
-	private SpringDetails spring_2;
-
-	@Param("SPRING 3")
-	private SpringDetails spring_3;
-
-	@Param("PIN 0")
-	private PinDetails pin_0;
-
-	@Param("PIN 1")
-	private PinDetails pin_1;
-
-	@Param("PIN 2")
-	private PinDetails pin_2;
-
-	@Param("PIN 3")
-	private PinDetails pin_3;
-
-	@Param("AXLE 0")
-	private AxleDetails axle_0;
-
-	@Param("AXLE 1")
-	private AxleDetails axle_1;
-
-	@Param("AXLE 2")
-	private AxleDetails axle_2;
-
-	@Param("AXLE 3")
-	private AxleDetails axle_3;
-
-	@Param("SPINNER")
+	@Param(value = "SPINNER", type = ParamType.Contexts)
 	private SpinnerDetails spinner;
-
-	@Param("AERIAL")
+	
+	@Param(value = "AERIAL", type = ParamType.Contexts)
 	private AerialDetails aerial;
 
-	@Param("AI")
+	@Param(value = "AI", type = ParamType.Contexts)
 	private AIDetails ai;
 
 	public RVCarParameters(Context root) {
@@ -1093,132 +1057,36 @@ public class RVCarParameters extends RVParameters {
 		this.body = body;
 	}
 
-	public WheelDetails getWheel_0() {
-		return wheel_0;
+	public WheelDetails[] getWheels() {
+		return wheels;
 	}
 
-	public void setWheel_0(WheelDetails wheel_0) {
-		this.wheel_0 = wheel_0;
+	public void setWheels(WheelDetails[] wheels) {
+		this.wheels = wheels;
 	}
 
-	public WheelDetails getWheel_1() {
-		return wheel_1;
+	public SpringDetails[] getSprings() {
+		return springs;
 	}
 
-	public void setWheel_1(WheelDetails wheel_1) {
-		this.wheel_1 = wheel_1;
+	public void setSprings(SpringDetails[] springs) {
+		this.springs = springs;
 	}
 
-	public WheelDetails getWheel_2() {
-		return wheel_2;
+	public PinDetails[] getPins() {
+		return pins;
 	}
 
-	public void setWheel_2(WheelDetails wheel_2) {
-		this.wheel_2 = wheel_2;
+	public void setPins(PinDetails[] pins) {
+		this.pins = pins;
 	}
 
-	public WheelDetails getWheel_3() {
-		return wheel_3;
+	public AxleDetails[] getAxles() {
+		return axles;
 	}
 
-	public void setWheel_3(WheelDetails wheel_3) {
-		this.wheel_3 = wheel_3;
-	}
-
-	public SpringDetails getSpring_0() {
-		return spring_0;
-	}
-
-	public void setSpring_0(SpringDetails spring_0) {
-		this.spring_0 = spring_0;
-	}
-
-	public SpringDetails getSpring_1() {
-		return spring_1;
-	}
-
-	public void setSpring_1(SpringDetails spring_1) {
-		this.spring_1 = spring_1;
-	}
-
-	public SpringDetails getSpring_2() {
-		return spring_2;
-	}
-
-	public void setSpring_2(SpringDetails spring_2) {
-		this.spring_2 = spring_2;
-	}
-
-	public SpringDetails getSpring_3() {
-		return spring_3;
-	}
-
-	public void setSpring_3(SpringDetails spring_3) {
-		this.spring_3 = spring_3;
-	}
-
-	public PinDetails getPin_0() {
-		return pin_0;
-	}
-
-	public void setPin_0(PinDetails pin_0) {
-		this.pin_0 = pin_0;
-	}
-
-	public PinDetails getPin_1() {
-		return pin_1;
-	}
-
-	public void setPin_1(PinDetails pin_1) {
-		this.pin_1 = pin_1;
-	}
-
-	public PinDetails getPin_2() {
-		return pin_2;
-	}
-
-	public void setPin_2(PinDetails pin_2) {
-		this.pin_2 = pin_2;
-	}
-
-	public PinDetails getPin_3() {
-		return pin_3;
-	}
-
-	public void setPin_3(PinDetails pin_3) {
-		this.pin_3 = pin_3;
-	}
-
-	public AxleDetails getAxle_0() {
-		return axle_0;
-	}
-
-	public void setAxle_0(AxleDetails axle_0) {
-		this.axle_0 = axle_0;
-	}
-
-	public AxleDetails getAxle_1() {
-		return axle_1;
-	}
-
-	public void setAxle_1(AxleDetails axle_1) {
-		this.axle_1 = axle_1;
-	}
-
-	public AxleDetails getAxle_2() {
-		return axle_2;
-	}
-
-	public void setAxle_2(AxleDetails axle_2) {
-		this.axle_2 = axle_2;
-	}
-
-	public AxleDetails getAxle_3() {
-		return axle_3;
-	}
-
-	public void setAxle_3(AxleDetails axle_3) {
-		this.axle_3 = axle_3;
+	public void setAxles(AxleDetails[] axles) {
+		this.axles = axles;
 	}
 
 	public SpinnerDetails getSpinner() {
