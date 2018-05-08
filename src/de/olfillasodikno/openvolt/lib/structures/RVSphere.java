@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVSphere extends RvStruct {
+public class RVSphere implements RvStruct  {
 
 	private RVVectorF center;
 	private float radius;

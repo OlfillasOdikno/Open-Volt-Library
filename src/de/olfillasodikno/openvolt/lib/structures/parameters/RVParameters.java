@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RVParameters {
 	private static final char CONTEXT_BEGIN_TOKEN = '{';
@@ -20,6 +22,8 @@ public class RVParameters {
 	private static final char COMMENT_TOKEN = ';';
 
 	private static final char STRING_TOKEN = '"';
+
+	protected static final Logger logger = Logger.getLogger(RVParameters.class.getName());
 
 	private final Context root;
 
@@ -38,8 +42,7 @@ public class RVParameters {
 		RawContext fileContext = new RawContext(null);
 		parseContext(lines, fileContext);
 		Context build = fileContext.build(null);
-		RVParameters param = new RVParameters(build.getSubcontexts().get("").get(0));
-		return param;
+		return new RVParameters(build.getSubcontexts().get("").get(0));
 	}
 
 	private static void parseContext(List<String> lines, RawContext ctx) {
@@ -47,79 +50,93 @@ public class RVParameters {
 		RawContext currentContext = ctx;
 
 		for (String line : lines) {
-			ArrayList<TypeObject<?>> types = currentContext.getTypes();
-
-			char[] chars = line.toCharArray();
-			int lastParsed = -1;
-
-			int startString = 0;
-
-			boolean inString = false;
-
-			for (int i = 0; i < line.length(); i++) {
-				char c = chars[i];
-				if (c == COMMENT_TOKEN && !inString) {
-					TypeObject<String> object = new TypeObject<String>(Type.COMMENT,
-							line.substring(i, line.length() - 1));
-					types.add(object);
-					break;
-				} else if (c == CONTEXT_BEGIN_TOKEN && !inString) {
-					RawContext context = new RawContext(currentContext);
-					TypeObject<RawContext> object = new TypeObject<RawContext>(Type.CONTEXT, context);
-					types.add(object);
-					lastParsed = i;
-					currentContext = context;
-				} else if (c == CONTEXT_END_TOKEN && !inString) {
-					currentContext = currentContext.getParent();
-					lastParsed = i;
-					if (currentContext == null) {
-						return;
-					}
-				} else if (c == STRING_TOKEN) {
-					inString = !inString;
-					if (!inString) {
-						TypeObject<String> object = new TypeObject<String>(Type.STRING, line.substring(startString, i));
-						types.add(object);
-						lastParsed = i;
-					} else {
-						startString = i + 1;
-					}
-				} else if (c == (char) 0x20 || c == (char) 0x09 || i == line.length() - 1) {
-					String substring = line.substring(lastParsed + 1, i + 1).trim();
-					substring = substring.replace(",", "");
-					if (substring.isEmpty()) {
-						continue;
-					}
-					TypeObject<?> object = null;
-					if (!substring.contains(".")) {
-						try {
-							int x = Integer.parseInt(substring);
-							object = new TypeObject<Integer>(Type.INT, x);
-						} catch (NumberFormatException e) {
-						}
-					} else {
-						try {
-							float x = Float.parseFloat(substring);
-							object = new TypeObject<Float>(Type.FLOAT, x);
-						} catch (NumberFormatException e) {
-						}
-					}
-					if (substring.equalsIgnoreCase("true") || substring.equalsIgnoreCase("false")) {
-						boolean x = substring.equalsIgnoreCase("true");
-						object = new TypeObject<Boolean>(Type.BOOLEAN, x);
-					}
-
-					if (object == null) {
-						object = new TypeObject<String>(Type.NAME, substring);
-					}
-					types.add(object);
-					lastParsed = i;
-				}
+			currentContext = parseLine(line, currentContext);
+			if (currentContext == null) {
+				return;
 			}
 		}
 	}
 
-	private static enum Type {
+	private static RawContext parseLine(String line, RawContext currentContext) {
+		List<TypeObject<?>> types = currentContext.getTypes();
+
+		char[] chars = line.toCharArray();
+		int lastParsed = -1;
+
+		int startString = 0;
+
+		boolean inString = false;
+
+		for (int i = 0; i < line.length(); i++) {
+			char c = chars[i];
+			if (c == COMMENT_TOKEN && !inString) {
+				TypeObject<String> object = new TypeObject<>(Type.COMMENT, line.substring(i, line.length() - 1));
+				types.add(object);
+			} else if (c == CONTEXT_BEGIN_TOKEN && !inString) {
+				RawContext context = new RawContext(currentContext);
+				TypeObject<RawContext> object = new TypeObject<>(Type.CONTEXT, context);
+				types.add(object);
+				lastParsed = i;
+				currentContext = context;
+			} else if (c == CONTEXT_END_TOKEN && !inString) {
+				currentContext = currentContext.getParent();
+				lastParsed = i;
+				if (currentContext == null) {
+					return null;
+				}
+			} else if (c == STRING_TOKEN) {
+				inString = !inString;
+				if (!inString) {
+					TypeObject<String> object = new TypeObject<>(Type.STRING, line.substring(startString, i));
+					types.add(object);
+					lastParsed = i;
+				} else {
+					startString = i + 1;
+				}
+			} else if (c == (char) 0x20 || c == (char) 0x09 || i == line.length() - 1) {
+				TypeObject<?> o = parseObject(line, lastParsed, i);
+				if (o != null) {
+					types.add(o);
+				}
+				lastParsed = i;
+			}
+		}
+		return currentContext;
+	}
+
+	private static TypeObject<?> parseObject(String line, int lastParsed, int i) {
+		String substring = line.substring(lastParsed + 1, i + 1).trim();
+		substring = substring.replace(",", "");
+		if (substring.isEmpty()) {
+			return null;
+		}
+		TypeObject<?> object = null;
+		if (!substring.contains(".")) {
+			try {
+				int x = Integer.parseInt(substring);
+				object = new TypeObject<>(Type.INT, x);
+			} catch (NumberFormatException e) {
+				// Nothing to do here
+			}
+		} else {
+			try {
+				float x = Float.parseFloat(substring);
+				object = new TypeObject<>(Type.FLOAT, x);
+			} catch (NumberFormatException e) {
+				// Nothing to do here
+			}
+		}
+		if (substring.equalsIgnoreCase("true") || substring.equalsIgnoreCase("false")) {
+			boolean x = substring.equalsIgnoreCase("true");
+			object = new TypeObject<>(Type.BOOLEAN, x);
+		}
+		if (object == null) {
+			object = new TypeObject<>(Type.NAME, substring);
+		}
+		return object;
+	}
+
+	private enum Type {
 		NAME, STRING, FLOAT, INT, BOOLEAN, COMMENT, CONTEXT
 	}
 
@@ -152,7 +169,7 @@ public class RVParameters {
 			this.parent = parent;
 		}
 
-		public ArrayList<TypeObject<?>> getTypes() {
+		public List<TypeObject<?>> getTypes() {
 			return types;
 		}
 
@@ -167,13 +184,13 @@ public class RVParameters {
 			for (int i = 0; i < types.size(); i++) {
 				TypeObject<?> type = types.get(i);
 				if (type.getType() == Type.CONTEXT) {
-					RawContext raw = (RawContext) types.get(i).getObject();
+					RawContext raw = (RawContext) type.getObject();
 					ArrayList<TypeObject<?>> typeObjects = new ArrayList<>();
 					for (int j = lastName; j < i; j++) {
 						typeObjects.add(types.get(j));
 					}
 					String ctxName = "";
-					if (typeObjects.size() > 0) {
+					if (!typeObjects.isEmpty()) {
 						ctxName = (String) typeObjects.get(0).object;
 					}
 					if (!current.getSubcontexts().containsKey(ctxName)) {
@@ -214,9 +231,9 @@ public class RVParameters {
 	}
 
 	public static class Context {
-		private final HashMap<String, HashMap<Integer, Context>> subcontexts;
+		private final HashMap<String, Map<Integer, Context>> subcontexts;
 
-		private final HashMap<String, ArrayList<ArrayList<Object>>> objects;
+		private final HashMap<String, List<List<Object>>> objects;
 
 		private final String name;
 
@@ -230,11 +247,11 @@ public class RVParameters {
 			return name;
 		}
 
-		public HashMap<String, ArrayList<ArrayList<Object>>> getObjects() {
+		public Map<String, List<List<Object>>> getObjects() {
 			return objects;
 		}
 
-		public HashMap<String, HashMap<Integer, Context>> getSubcontexts() {
+		public Map<String, Map<Integer, Context>> getSubcontexts() {
 			return subcontexts;
 		}
 	}
@@ -244,11 +261,11 @@ public class RVParameters {
 	protected @interface Param {
 		String value();
 
-		ParamType type() default ParamType.Normal;
+		ParamType type() default ParamType.NORMAL;
 	}
 
-	public static enum ParamType {
-		Normal, Contexts;
+	public enum ParamType {
+		NORMAL, CONTEXT;
 	}
 
 	private static final HashMap<Class<?>, ParamWrapper<?>> wrappers = new HashMap<>();
@@ -266,169 +283,180 @@ public class RVParameters {
 		decodeContext(getRoot(), getClass(), this);
 	}
 
-	private void decodeContext(Context current, Class<?> clazz, Object instance) {
-		HashMap<String, Field> params = new HashMap<>();
-		HashMap<String, Field> contexts = new HashMap<>();
+	private static void decodeContext(Context current, Class<?> clazz, Object instance) {
+		Map<String, Field> params = new HashMap<>();
+		Map<String, Field> contexts = new HashMap<>();
 		for (Field f : clazz.getDeclaredFields()) {
-			if (f.isAnnotationPresent(Param.class)) {
-				Param p = f.getAnnotation(Param.class);
-				if (p.type() == ParamType.Normal) {
-					params.put(p.value(), f);
-				} else if (p.type() == ParamType.Contexts) {
-					contexts.put(p.value(), f);
-				}
+			if (!f.isAnnotationPresent(Param.class)) {
+				continue;
+			}
+			Param p = f.getAnnotation(Param.class);
+			if (p.type() == ParamType.NORMAL) {
+				params.put(p.value(), f);
+			} else if (p.type() == ParamType.CONTEXT) {
+				contexts.put(p.value(), f);
 			}
 		}
-		HashMap<String, ArrayList<ArrayList<Object>>> objects = current.getObjects();
-		for (Map.Entry<String, ArrayList<ArrayList<Object>>> entry : objects.entrySet()) {
-			String key = entry.getKey();
-			if (!params.containsKey(key) || entry.getValue().isEmpty()) {
-				continue;
+		Map<String, List<List<Object>>> objects = current.getObjects();
+		objects.forEach((key, vals) -> {
+			if (!params.containsKey(key) || vals.isEmpty()) {
+				return;
 			}
 			Field f = params.get(key);
-			boolean primitive = f.getType().isPrimitive();
-			boolean array = f.getType().isArray();
-			if (array) {
-				ArrayList<ArrayList<Object>> vals = entry.getValue();
-				Object[] arr = (Object[]) Array.newInstance(f.getType().getComponentType(), vals.size());
-				for (int i = 0; i < arr.length; i++) {
-					ArrayList<Object> values = vals.get(i);
-					if (values.size() < 2) {
-						continue;
-					}
-					Object idx = values.remove(0);
-					if (!(idx instanceof Integer) || (int) idx >= arr.length) {
-						continue;
-					}
-					Object val = values.get(0);
-					Class<?> type = f.getType().getComponentType();
-					if (wrappers.containsKey(type)) {
-						val = wrappers.get(type).wrap(values);
-						if (val == null) {
-							System.err.println("Failed to wrap: " + key);
-							continue;
-						}
-					}
-					if (!(val.getClass().equals(type))) {
-						continue;
-					}
-					arr[(int) idx] = val;
-				}
-				try {
-					f.setAccessible(true);
-					f.set(instance, arr);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			} else {
-				ArrayList<Object> vals = entry.getValue().get(0);
-				setField(key, f, instance, primitive, vals);
-			}
-		}
-		HashMap<String, HashMap<Integer, Context>> subcontexts = current.getSubcontexts();
-		for (Map.Entry<String, HashMap<Integer, Context>> entry : subcontexts.entrySet()) {
-			String key = entry.getKey();
-			if (!contexts.containsKey(key)) {
-				continue;
+			decodeObject(key, vals, f, instance);
+		});
+		Map<String, Map<Integer, Context>> subcontexts = current.getSubcontexts();
+		subcontexts.forEach((key, ctx) -> {
+			if (!contexts.containsKey(key) || ctx.isEmpty()) {
+				return;
 			}
 			Field f = contexts.get(key);
-			HashMap<Integer, Context> ctx = entry.getValue();
-			if (f.getType().isArray()) {
-				int max = 0;
-				for (Integer i : ctx.keySet()) {
-					if (i > max) {
-						max = i;
-					}
-				}
-				Object[] arr = (Object[]) Array.newInstance(f.getType().getComponentType(), max + 1);
-				for (Map.Entry<Integer, Context> con : ctx.entrySet()) {
-					try {
-						Object o = f.getType().getComponentType().newInstance();
-						decodeContext(con.getValue(), f.getType().getComponentType(), o);
-						arr[con.getKey()] = o;
-					} catch (InstantiationException | IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
+			decodeSubcontext(ctx, f, instance);
+		});
+	}
+
+	private static void decodeObject(String key, List<List<Object>> vals, Field f, Object instance) {
+		boolean primitive = f.getType().isPrimitive();
+		boolean array = f.getType().isArray();
+		if (array) {
+			if (!setArrayField(f, instance, vals)) {
+				logger.log(Level.SEVERE, "Failed to wrap: {0}", key);
+			}
+		} else {
+			setField(key, f, instance, primitive, vals.get(0));
+		}
+	}
+
+	private static void decodeSubcontext(Map<Integer, Context> ctx, Field f, Object instance) {
+		if (f.getType().isArray()) {
+			int max = 0;
+			for (Integer i : ctx.keySet()) {
+				max = Math.max(max, i);
+			}
+			Object[] arr = (Object[]) Array.newInstance(f.getType().getComponentType(), max + 1);
+			ctx.forEach((k, v) -> {
 				try {
-					f.setAccessible(true);
-					f.set(instance, arr);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			} else if (ctx.size() > 0) {
-				Context con = ctx.values().iterator().next();
-				try {
-					Object o = f.getType().newInstance();
-					decodeContext(con, f.getType(), o);
-					f.setAccessible(true);
-					f.set(instance, o);
+					Object o = f.getType().getComponentType().newInstance();
+					decodeContext(v, f.getType().getComponentType(), o);
+					arr[k] = o;
 				} catch (InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
-					continue;
+					logger.log(Level.SEVERE, e.getMessage(), e.getCause());
 				}
+			});
+			setField(f, instance, arr);
+		} else {
+			Context con = ctx.values().iterator().next();
+			try {
+				Object o = f.getType().newInstance();
+				decodeContext(con, f.getType(), o);
+				setField(f, instance, o);
+			} catch (InstantiationException | IllegalAccessException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e.getCause());
 			}
 		}
 	}
 
-	private static void setField(String key, Field f, Object instance, boolean primitive, ArrayList<Object> vals) {
+	private static boolean setArrayField(Field f, Object instance, List<List<Object>> vals) {
+		Object[] arr = (Object[]) Array.newInstance(f.getType().getComponentType(), vals.size());
+		for (int i = 0; i < arr.length; i++) {
+			List<Object> values = vals.get(i);
+			Object idx = null;
+			if (values.size() >= 2) {
+				idx = values.remove(0);
+			}
+			if (idx == null || !(idx instanceof Integer) || (int) idx >= arr.length) {
+				continue;
+			}
+			Object val = values.get(0);
+			Class<?> type = f.getType().getComponentType();
+			if (wrappers.containsKey(type)) {
+				val = wrappers.get(type).wrap(values);
+				if (val == null || !(val.getClass().equals(type))) {
+					return false;
+				} else {
+					arr[(int) idx] = val;
+				}
+			} else {
+				arr[(int) idx] = val;
+			}
+		}
+		try {
+			f.setAccessible(true);
+			f.set(instance, arr);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			return false;
+		}
+		return true;
+	}
+
+	private static void setField(String key, Field f, Object instance, boolean primitive, List<Object> vals) {
 		if (vals.isEmpty()) {
 			return;
 		}
 		if (primitive) {
 			Object val = vals.get(0);
-			Class<?> type = f.getType();
-			try {
-				f.setAccessible(true);
-				if (type.equals(boolean.class)) {
-					if (!(val instanceof Boolean)) {
-						System.err.println("Invalid type for: " + key + " val: " + val);
-						return;
-					}
-					f.setBoolean(instance, (boolean) val);
-				} else if (type.equals(int.class)) {
-					if (!(val instanceof Integer)) {
-						System.err.println("Invalid type for: " + key + " val: " + val);
-						return;
-					}
-					f.setInt(instance, (int) val);
-				} else if (type.equals(float.class)) {
-					if (!(val instanceof Float) && !(val instanceof Integer)) {
-						System.err.println("Invalid type for: " + key + " val: " + val);
-						return;
-					}
-					f.setFloat(instance, (float) val);
-				}
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
+			if (!setPrimitiveField(f, instance, val)) {
+				String msg = "Invalid type for: " + key + " val: " + val;
+				logger.warning(msg);
 			}
 		} else {
-			Object val = vals.get(0);
-			Class<?> type = f.getType();
-			if (wrappers.containsKey(type)) {
-				val = wrappers.get(type).wrap(vals);
-				if (val == null) {
-					System.err.println("Failed to wrap: " + key + " val: " + val);
-					return;
-				}
-			}
-			if (!(val.getClass().equals(type))) {
-				return;
-			}
-			try {
-				f.setAccessible(true);
-				f.set(instance, val);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
+			if (!setField(f, instance, vals)) {
+				String msg = "Failed to wrap: " + key + " vals: " + vals;
+				logger.warning(msg);
 			}
 		}
+	}
+
+	private static boolean setField(Field f, Object instance, Object val) {
+		f.setAccessible(true);
+		try {
+			f.set(instance, val);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			return false;
+		}
+		return true;
+	}
+
+	private static boolean setField(Field f, Object instance, List<Object> vals) {
+		Object val = vals.get(0);
+		Class<?> type = f.getType();
+		if (wrappers.containsKey(type)) {
+			val = wrappers.get(type).wrap(vals);
+		}
+		if (val == null || !(val.getClass().equals(type))) {
+			return false;
+		}
+		return setField(f, instance, val);
+	}
+
+	private static boolean setPrimitiveField(Field f, Object instance, Object val) {
+		Class<?> type = f.getType();
+		try {
+			f.setAccessible(true);
+			if (type.equals(boolean.class) && val instanceof Boolean) {
+				f.setBoolean(instance, (boolean) val);
+			} else if (type.equals(int.class) && val instanceof Integer) {
+				f.setInt(instance, (int) val);
+			} else if (type.equals(float.class) && ((val instanceof Float) || (val instanceof Integer))) {
+				f.setFloat(instance, (float) val);
+			} else {
+				return false;
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+			return false;
+		}
+		return true;
 	}
 
 	public static void main(String[] args) throws IOException {
 		File test = new File("parameters.txt");
 		RVCarParameters param = new RVCarParameters(RVParameters.fromFile(test).getRoot());
 		param.decode();
-		System.out.println("Name: " + param.getName());
-		System.out.println(param.getWheels()[1].getModel_num());
+		logger.log(Level.INFO, "Name: {0}", param.getName());
+		logger.log(Level.INFO, "Model: {0}", param.getWheels()[1].getModelNum());
+		logger.log(Level.INFO, "Model0: {0}", param.getModels()[0]);
 	}
 }

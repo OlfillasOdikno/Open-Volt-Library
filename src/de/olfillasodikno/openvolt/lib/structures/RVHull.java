@@ -2,19 +2,19 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVHull extends RvStruct {
+public class RVHull implements RvStruct {
 
-	private short convex_hull_count;
+	private short convexHullCount;
 
-	private RVConvexHull[] convex_hulls;
+	private RVConvexHull[] convexHulls;
 	private RVInterior interior;
 
 	@Override
 	public void encode(ByteBuffer buf) {
 
-		buf.putShort(convex_hull_count);
+		buf.putShort(convexHullCount);
 
-		for (RVConvexHull cHull : convex_hulls) {
+		for (RVConvexHull cHull : convexHulls) {
 			cHull.encode(buf);
 		}
 
@@ -23,32 +23,32 @@ public class RVHull extends RvStruct {
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		convex_hull_count = buf.getShort();
+		convexHullCount = buf.getShort();
 
-		convex_hulls = new RVConvexHull[convex_hull_count];
-		for (int i = 0; i < convex_hulls.length; i++) {
-			convex_hulls[i] = new RVConvexHull();
-			convex_hulls[i].decode(buf);
+		convexHulls = new RVConvexHull[convexHullCount];
+		for (int i = 0; i < convexHulls.length; i++) {
+			convexHulls[i] = new RVConvexHull();
+			convexHulls[i].decode(buf);
 		}
 
 		interior = new RVInterior();
 		interior.decode(buf);
 	}
 
-	public short getConvex_hull_count() {
-		return convex_hull_count;
+	public short getConvexHullCount() {
+		return convexHullCount;
 	}
 
-	public void setConvex_hull_count(short convex_hull_count) {
-		this.convex_hull_count = convex_hull_count;
+	public void setConvexHullCount(short convexHullCount) {
+		this.convexHullCount = convexHullCount;
 	}
 
-	public RVConvexHull[] getConvex_hulls() {
-		return convex_hulls;
+	public RVConvexHull[] getConvexHulls() {
+		return convexHulls;
 	}
 
-	public void setConvex_hulls(RVConvexHull[] convex_hulls) {
-		this.convex_hulls = convex_hulls;
+	public void setConvexHulls(RVConvexHull[] convexHulls) {
+		this.convexHulls = convexHulls;
 	}
 
 	public RVInterior getInterior() {

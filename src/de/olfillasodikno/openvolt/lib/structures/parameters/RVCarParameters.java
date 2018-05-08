@@ -12,89 +12,89 @@ public class RVCarParameters extends RVParameters {
 	private String[] models;
 
 	@Param("TPAGE")
-	private String texture_file;
+	private String textureFile;
 	@Param("COLL")
-	private String collision_file;
+	private String collisionFile;
 
 	@Param("EnvRGB")
-	private RVVectorI env_rgb;
+	private RVVectorI envRGB;
 
 	@Param("BestTime")
-	private boolean frontend_bestTime;
+	private boolean frontendBestTime;
 
 	@Param("Selectable")
-	private boolean frontend_selectable;
+	private boolean frontendSelectable;
 
 	@Param("Class")
-	private int frontend_engine_type;
+	private int frontendEngineType;
 
 	@Param("Obtain")
-	private int frontend_obtain_method;
+	private int frontendObtainMethod;
 
 	@Param("Rating")
-	private int frontend_skill_level;
+	private int frontendSkillLevel;
 
 	@Param("TopEnd")
-	private float frontend_top_speed;
+	private float frontendTopSpeed;
 
 	@Param("Acc")
-	private float frontend_acceleration;
+	private float frontendAcceleration;
 
 	@Param("Weight")
-	private float frontend_weight;
+	private float frontendWeight;
 
 	@Param("Handling")
-	private float frontend_handling;
+	private float frontendHandling;
 
 	@Param("Trans")
-	private int frontend_transmission_type;
+	private int frontendTransmissionType;
 
 	@Param("MaxRevs")
-	private float frontend_max_revs;
+	private float frontendMaxRevs;
 
 	@Param("SteerRate")
-	private float steer_rate;
+	private float steerRate;
 
 	@Param("SteerMod")
-	private float steer_mod;
+	private float steerMod;
 
 	@Param("EngineRate")
-	private float engine_rate;
+	private float engineRate;
 
 	@Param("TopSpeed")
-	private float top_speed;
+	private float topSpeed;
 
 	@Param("DownForceMod")
-	private float down_force_mod;
+	private float downForceMod;
 
 	@Param("CoM")
-	private RVVectorF center_of_mass;
+	private RVVectorF centerOfMass;
 
 	@Param("Weapon")
-	private RVVectorF weapon_offset;
+	private RVVectorF weaponOffset;
 
-	@Param(value = "BODY", type = ParamType.Contexts)
+	@Param(value = "BODY", type = ParamType.CONTEXT)
 	private BodyDetails body;
 
-	@Param(value = "WHEEL", type = ParamType.Contexts)
+	@Param(value = "WHEEL", type = ParamType.CONTEXT)
 	private WheelDetails[] wheels;
 
-	@Param(value = "SPRING", type = ParamType.Contexts)
+	@Param(value = "SPRING", type = ParamType.CONTEXT)
 	private SpringDetails[] springs;
 
-	@Param(value = "PIN", type = ParamType.Contexts)
+	@Param(value = "PIN", type = ParamType.CONTEXT)
 	private PinDetails[] pins;
 
-	@Param(value = "AXLE", type = ParamType.Contexts)
+	@Param(value = "AXLE", type = ParamType.CONTEXT)
 	private AxleDetails[] axles;
 
-	@Param(value = "SPINNER", type = ParamType.Contexts)
+	@Param(value = "SPINNER", type = ParamType.CONTEXT)
 	private SpinnerDetails spinner;
-	
-	@Param(value = "AERIAL", type = ParamType.Contexts)
+
+	@Param(value = "AERIAL", type = ParamType.CONTEXT)
 	private AerialDetails aerial;
 
-	@Param(value = "AI", type = ParamType.Contexts)
+	@Param(value = "AI", type = ParamType.CONTEXT)
 	private AIDetails ai;
 
 	public RVCarParameters(Context root) {
@@ -103,7 +103,7 @@ public class RVCarParameters extends RVParameters {
 
 	public static class BodyDetails {
 		@Param("ModelNum")
-		private int model_num;
+		private int modelNum;
 
 		@Param("Offset")
 		private RVVectorF offset;
@@ -120,30 +120,22 @@ public class RVCarParameters extends RVParameters {
 		private float hardness;
 
 		@Param("Resistance")
-		private float air_linear_resistance;
+		private float airLinearResistance;
 
 		@Param("AngRes")
-		private float air_angular_resistance;
+		private float airAngularResistance;
 
 		@Param("ResMod")
-		private float air_scale_resistance;
+		private float airScaleResistance;
 
 		@Param("Grip")
 		private float grip;
 
 		@Param("StaticFriction")
-		private float static_friction;
+		private float staticFriction;
 
 		@Param("KineticFriction")
-		private float kinetic_friction;
-
-		public int getModel_num() {
-			return model_num;
-		}
-
-		public void setModel_num(int model_num) {
-			this.model_num = model_num;
-		}
+		private float kineticFriction;
 
 		public RVVectorF getOffset() {
 			return offset;
@@ -177,30 +169,6 @@ public class RVCarParameters extends RVParameters {
 			this.hardness = hardness;
 		}
 
-		public float getAir_linear_resistance() {
-			return air_linear_resistance;
-		}
-
-		public void setAir_linear_resistance(float air_linear_resistance) {
-			this.air_linear_resistance = air_linear_resistance;
-		}
-
-		public float getAir_angular_resistance() {
-			return air_angular_resistance;
-		}
-
-		public void setAir_angular_resistance(float air_angular_resistance) {
-			this.air_angular_resistance = air_angular_resistance;
-		}
-
-		public float getAir_scale_resistance() {
-			return air_scale_resistance;
-		}
-
-		public void setAir_scale_resistance(float air_scale_resistance) {
-			this.air_scale_resistance = air_scale_resistance;
-		}
-
 		public float getGrip() {
 			return grip;
 		}
@@ -209,27 +177,59 @@ public class RVCarParameters extends RVParameters {
 			this.grip = grip;
 		}
 
-		public float getStatic_friction() {
-			return static_friction;
+		public int getModelNum() {
+			return modelNum;
 		}
 
-		public void setStatic_friction(float static_friction) {
-			this.static_friction = static_friction;
+		public void setModelNum(int modelNum) {
+			this.modelNum = modelNum;
 		}
 
-		public float getKinetic_friction() {
-			return kinetic_friction;
+		public float getAirLinearResistance() {
+			return airLinearResistance;
 		}
 
-		public void setKinetic_friction(float kinetic_friction) {
-			this.kinetic_friction = kinetic_friction;
+		public void setAirLinearResistance(float airLinearResistance) {
+			this.airLinearResistance = airLinearResistance;
+		}
+
+		public float getAirAngularResistance() {
+			return airAngularResistance;
+		}
+
+		public void setAirAngularResistance(float airAngularResistance) {
+			this.airAngularResistance = airAngularResistance;
+		}
+
+		public float getAirScaleResistance() {
+			return airScaleResistance;
+		}
+
+		public void setAirScaleResistance(float airScaleResistance) {
+			this.airScaleResistance = airScaleResistance;
+		}
+
+		public float getStaticFriction() {
+			return staticFriction;
+		}
+
+		public void setStaticFriction(float staticFriction) {
+			this.staticFriction = staticFriction;
+		}
+
+		public float getKineticFriction() {
+			return kineticFriction;
+		}
+
+		public void setKineticFriction(float kineticFriction) {
+			this.kineticFriction = kineticFriction;
 		}
 
 	}
 
 	public static class WheelDetails {
 		@Param("ModelNum")
-		private int model_num;
+		private int modelNum;
 
 		@Param("Offset1")
 		private RVVectorF offset1;
@@ -247,10 +247,10 @@ public class RVCarParameters extends RVParameters {
 		private boolean turnable;
 
 		@Param("SteerRatio")
-		private float steer_ratio;
+		private float steerRatio;
 
 		@Param("EngineRatio")
-		private float engine_ratio;
+		private float engineRatio;
 
 		@Param("Radius")
 		private float radius;
@@ -262,32 +262,32 @@ public class RVCarParameters extends RVParameters {
 		private float gravity;
 
 		@Param("MaxPos")
-		private float max_pos;
+		private float maxPos;
 
 		@Param("SkidWidth")
-		private float skid_width;
+		private float skidWidth;
 
 		@Param("ToeIn")
-		private float toe_in;
+		private float toeIn;
 
 		@Param("AxleFriction")
-		private float axle_friction;
+		private float axleFriction;
 
 		@Param("Grip")
 		private float grip;
 
 		@Param("StaticFriction")
-		private float static_friction;
+		private float staticFriction;
 
 		@Param("KineticFriction")
-		private float kinetic_friction;
+		private float kineticFriction;
 
-		public int getModel_num() {
-			return model_num;
+		public int getModelNum() {
+			return modelNum;
 		}
 
-		public void setModel_num(int model_num) {
-			this.model_num = model_num;
+		public void setModelNum(int modelNum) {
+			this.modelNum = modelNum;
 		}
 
 		public RVVectorF getOffset1() {
@@ -330,20 +330,20 @@ public class RVCarParameters extends RVParameters {
 			this.turnable = turnable;
 		}
 
-		public float getSteer_ratio() {
-			return steer_ratio;
+		public float getSteerRatio() {
+			return steerRatio;
 		}
 
-		public void setSteer_ratio(float steer_ratio) {
-			this.steer_ratio = steer_ratio;
+		public void setSteerRatio(float steerRatio) {
+			this.steerRatio = steerRatio;
 		}
 
-		public float getEngine_ratio() {
-			return engine_ratio;
+		public float getEngineRatio() {
+			return engineRatio;
 		}
 
-		public void setEngine_ratio(float engine_ratio) {
-			this.engine_ratio = engine_ratio;
+		public void setEngineRatio(float engineRatio) {
+			this.engineRatio = engineRatio;
 		}
 
 		public float getRadius() {
@@ -370,36 +370,36 @@ public class RVCarParameters extends RVParameters {
 			this.gravity = gravity;
 		}
 
-		public float getMax_pos() {
-			return max_pos;
+		public float getMaxPos() {
+			return maxPos;
 		}
 
-		public void setMax_pos(float max_pos) {
-			this.max_pos = max_pos;
+		public void setMaxPos(float maxPos) {
+			this.maxPos = maxPos;
 		}
 
-		public float getSkid_width() {
-			return skid_width;
+		public float getSkidWidth() {
+			return skidWidth;
 		}
 
-		public void setSkid_width(float skid_width) {
-			this.skid_width = skid_width;
+		public void setSkidWidth(float skidWidth) {
+			this.skidWidth = skidWidth;
 		}
 
-		public float getToe_in() {
-			return toe_in;
+		public float getToeIn() {
+			return toeIn;
 		}
 
-		public void setToe_in(float toe_in) {
-			this.toe_in = toe_in;
+		public void setToeIn(float toeIn) {
+			this.toeIn = toeIn;
 		}
 
-		public float getAxle_friction() {
-			return axle_friction;
+		public float getAxleFriction() {
+			return axleFriction;
 		}
 
-		public void setAxle_friction(float axle_friction) {
-			this.axle_friction = axle_friction;
+		public void setAxleFriction(float axleFriction) {
+			this.axleFriction = axleFriction;
 		}
 
 		public float getGrip() {
@@ -410,27 +410,27 @@ public class RVCarParameters extends RVParameters {
 			this.grip = grip;
 		}
 
-		public float getStatic_friction() {
-			return static_friction;
+		public float getStaticFriction() {
+			return staticFriction;
 		}
 
-		public void setStatic_friction(float static_friction) {
-			this.static_friction = static_friction;
+		public void setStaticFriction(float staticFriction) {
+			this.staticFriction = staticFriction;
 		}
 
-		public float getKinetic_friction() {
-			return kinetic_friction;
+		public float getKineticFriction() {
+			return kineticFriction;
 		}
 
-		public void setKinetic_friction(float kinetic_friction) {
-			this.kinetic_friction = kinetic_friction;
+		public void setKineticFriction(float kineticFriction) {
+			this.kineticFriction = kineticFriction;
 		}
 
 	}
 
 	public static class SpringDetails {
 		@Param("ModelNum")
-		private int model_num;
+		private int modelNum;
 
 		@Param("Offset")
 		private RVVectorF offset;
@@ -447,12 +447,12 @@ public class RVCarParameters extends RVParameters {
 		@Param("Restitution")
 		private float restitution;
 
-		public int getModel_num() {
-			return model_num;
+		public int getModelNum() {
+			return modelNum;
 		}
 
-		public void setModel_num(int model_num) {
-			this.model_num = model_num;
+		public void setModelNum(int modelNum) {
+			this.modelNum = modelNum;
 		}
 
 		public RVVectorF getOffset() {
@@ -499,7 +499,7 @@ public class RVCarParameters extends RVParameters {
 
 	public static class PinDetails {
 		@Param("ModelNum")
-		private int model_num;
+		private int modelNum;
 
 		@Param("Offset")
 		private RVVectorF offset;
@@ -507,12 +507,12 @@ public class RVCarParameters extends RVParameters {
 		@Param("Length")
 		private float length;
 
-		public int getModel_num() {
-			return model_num;
+		public int getModelNum() {
+			return modelNum;
 		}
 
-		public void setModel_num(int model_num) {
-			this.model_num = model_num;
+		public void setModelNum(int modelNum) {
+			this.modelNum = modelNum;
 		}
 
 		public RVVectorF getOffset() {
@@ -535,7 +535,7 @@ public class RVCarParameters extends RVParameters {
 
 	public static class AxleDetails {
 		@Param("ModelNum")
-		private int model_num;
+		private int modelNum;
 
 		@Param("Offset")
 		private RVVectorF offset;
@@ -543,12 +543,12 @@ public class RVCarParameters extends RVParameters {
 		@Param("Length")
 		private float length;
 
-		public int getModel_num() {
-			return model_num;
+		public int getModelNum() {
+			return modelNum;
 		}
 
-		public void setModel_num(int model_num) {
-			this.model_num = model_num;
+		public void setModelNum(int modelNum) {
+			this.modelNum = modelNum;
 		}
 
 		public RVVectorF getOffset() {
@@ -571,7 +571,7 @@ public class RVCarParameters extends RVParameters {
 
 	public static class SpinnerDetails {
 		@Param("ModelNum")
-		private int model_num;
+		private int modelNum;
 
 		@Param("Offset")
 		private RVVectorF offset;
@@ -580,15 +580,7 @@ public class RVCarParameters extends RVParameters {
 		private RVVectorF axis;
 
 		@Param("AngVel")
-		private float angular_velocity;
-
-		public int getModel_num() {
-			return model_num;
-		}
-
-		public void setModel_num(int model_num) {
-			this.model_num = model_num;
-		}
+		private float angularVelocity;
 
 		public RVVectorF getOffset() {
 			return offset;
@@ -606,12 +598,20 @@ public class RVCarParameters extends RVParameters {
 			this.axis = axis;
 		}
 
-		public float getAngular_velocity() {
-			return angular_velocity;
+		public int getModelNum() {
+			return modelNum;
 		}
 
-		public void setAngular_velocity(float angular_velocity) {
-			this.angular_velocity = angular_velocity;
+		public void setModelNum(int modelNum) {
+			this.modelNum = modelNum;
+		}
+
+		public float getAngularVelocity() {
+			return angularVelocity;
+		}
+
+		public void setAngularVelocity(float angularVelocity) {
+			this.angularVelocity = angularVelocity;
 		}
 
 	}
@@ -619,10 +619,10 @@ public class RVCarParameters extends RVParameters {
 	public static class AerialDetails {
 
 		@Param("SecModelNum")
-		private int sec_model_num;
+		private int secModelNum;
 
 		@Param("TopModelNum")
-		private int top_model_num;
+		private int topModelNum;
 
 		@Param("Offset")
 		private RVVectorF offset;
@@ -639,20 +639,20 @@ public class RVCarParameters extends RVParameters {
 		@Param("Damping")
 		private float damping;
 
-		public int getSec_model_num() {
-			return sec_model_num;
+		public int getSecModelNum() {
+			return secModelNum;
 		}
 
-		public void setSec_model_num(int sec_model_num) {
-			this.sec_model_num = sec_model_num;
+		public void setSecModelNum(int secModelNum) {
+			this.secModelNum = secModelNum;
 		}
 
-		public int getTop_model_num() {
-			return top_model_num;
+		public int getTopModelNum() {
+			return topModelNum;
 		}
 
-		public void setTop_model_num(int top_model_num) {
-			this.top_model_num = top_model_num;
+		public void setTopModelNum(int topModelNum) {
+			this.topModelNum = topModelNum;
 		}
 
 		public RVVectorF getOffset() {
@@ -700,43 +700,43 @@ public class RVCarParameters extends RVParameters {
 	public static class AIDetails {
 
 		@Param("UnderThresh")
-		private float under_thresh;
+		private float underThresh;
 
 		@Param("UnderRange")
-		private float under_range;
+		private float underRange;
 
 		@Param("UnderFront")
-		private float under_front;
+		private float underFront;
 
 		@Param("UnderRear")
-		private float under_rear;
+		private float underRear;
 
 		@Param("UnderMax")
-		private float under_max;
+		private float underMax;
 
 		@Param("OverThresh")
-		private float over_thresh;
+		private float overThresh;
 
 		@Param("OverRange")
-		private float over_range;
+		private float overRange;
 
 		@Param("OverMax")
-		private float over_max;
+		private float overMax;
 
 		@Param("OverAccThresh")
-		private float over_acceleration_thresh;
+		private float overAccelerationThresh;
 
 		@Param("OverAccRange")
-		private float over_acceleration_range;
+		private float overAccelerationRange;
 
 		@Param("PickupBias")
-		private int pickup_bias;
+		private int pickupBias;
 
 		@Param("BlockBias")
-		private int block_bias;
+		private int blockBias;
 
 		@Param("OvertakeBias")
-		private int overtake_bias;
+		private int overtakeBias;
 
 		@Param("Suspension")
 		private int suspension;
@@ -744,108 +744,110 @@ public class RVCarParameters extends RVParameters {
 		@Param("Aggression")
 		private int aggression;
 
-		public float getUnder_thresh() {
-			return under_thresh;
+
+
+		public float getUnderThresh() {
+			return underThresh;
 		}
 
-		public void setUnder_thresh(float under_thresh) {
-			this.under_thresh = under_thresh;
+		public void setUnderThresh(float underThresh) {
+			this.underThresh = underThresh;
 		}
 
-		public float getUnder_range() {
-			return under_range;
+		public float getUnderRange() {
+			return underRange;
 		}
 
-		public void setUnder_range(float under_range) {
-			this.under_range = under_range;
+		public void setUnderRange(float underRange) {
+			this.underRange = underRange;
 		}
 
-		public float getUnder_front() {
-			return under_front;
+		public float getUnderFront() {
+			return underFront;
 		}
 
-		public void setUnder_front(float under_front) {
-			this.under_front = under_front;
+		public void setUnderFront(float underFront) {
+			this.underFront = underFront;
 		}
 
-		public float getUnder_rear() {
-			return under_rear;
+		public float getUnderRear() {
+			return underRear;
 		}
 
-		public void setUnder_rear(float under_rear) {
-			this.under_rear = under_rear;
+		public void setUnderRear(float underRear) {
+			this.underRear = underRear;
 		}
 
-		public float getUnder_max() {
-			return under_max;
+		public float getUnderMax() {
+			return underMax;
 		}
 
-		public void setUnder_max(float under_max) {
-			this.under_max = under_max;
+		public void setUnderMax(float underMax) {
+			this.underMax = underMax;
 		}
 
-		public float getOver_thresh() {
-			return over_thresh;
+		public float getOverThresh() {
+			return overThresh;
 		}
 
-		public void setOver_thresh(float over_thresh) {
-			this.over_thresh = over_thresh;
+		public void setOverThresh(float overThresh) {
+			this.overThresh = overThresh;
 		}
 
-		public float getOver_range() {
-			return over_range;
+		public float getOverRange() {
+			return overRange;
 		}
 
-		public void setOver_range(float over_range) {
-			this.over_range = over_range;
+		public void setOverRange(float overRange) {
+			this.overRange = overRange;
 		}
 
-		public float getOver_max() {
-			return over_max;
+		public float getOverMax() {
+			return overMax;
 		}
 
-		public void setOver_max(float over_max) {
-			this.over_max = over_max;
+		public void setOverMax(float overMax) {
+			this.overMax = overMax;
 		}
 
-		public float getOver_acceleration_thresh() {
-			return over_acceleration_thresh;
+		public float getOverAccelerationThresh() {
+			return overAccelerationThresh;
 		}
 
-		public void setOver_acceleration_thresh(float over_acceleration_thresh) {
-			this.over_acceleration_thresh = over_acceleration_thresh;
+		public void setOverAccelerationThresh(float overAccelerationThresh) {
+			this.overAccelerationThresh = overAccelerationThresh;
 		}
 
-		public float getOver_acceleration_range() {
-			return over_acceleration_range;
+		public float getOverAccelerationRange() {
+			return overAccelerationRange;
 		}
 
-		public void setOver_acceleration_range(float over_acceleration_range) {
-			this.over_acceleration_range = over_acceleration_range;
+		public void setOverAccelerationRange(float overAccelerationRange) {
+			this.overAccelerationRange = overAccelerationRange;
 		}
 
-		public int getPickup_bias() {
-			return pickup_bias;
+		public int getPickupBias() {
+			return pickupBias;
 		}
 
-		public void setPickup_bias(int pickup_bias) {
-			this.pickup_bias = pickup_bias;
+		public void setPickupBias(int pickupBias) {
+			this.pickupBias = pickupBias;
 		}
 
-		public int getBlock_bias() {
-			return block_bias;
+		public int getBlockBias() {
+			return blockBias;
 		}
 
-		public void setBlock_bias(int block_bias) {
-			this.block_bias = block_bias;
+		public void setBlockBias(int blockBias) {
+			this.blockBias = blockBias;
 		}
 
-		public int getOvertake_bias() {
-			return overtake_bias;
+		public int getOvertakeBias() {
+			return overtakeBias;
 		}
 
-		public void setOvertake_bias(int overtake_bias) {
-			this.overtake_bias = overtake_bias;
+		public void setOvertakeBias(int overtakeBias) {
+			this.overtakeBias = overtakeBias;
 		}
 
 		public int getSuspension() {
@@ -881,172 +883,172 @@ public class RVCarParameters extends RVParameters {
 		this.models = models;
 	}
 
-	public String getTexture_file() {
-		return texture_file;
+	public String getTextureFile() {
+		return textureFile;
 	}
 
-	public void setTexture_file(String texture_file) {
-		this.texture_file = texture_file;
+	public void setTextureFile(String textureFile) {
+		this.textureFile = textureFile;
 	}
 
-	public String getCollision_file() {
-		return collision_file;
+	public String getCollisionFile() {
+		return collisionFile;
 	}
 
-	public void setCollision_file(String collision_file) {
-		this.collision_file = collision_file;
+	public void setCollisionFile(String collisionFile) {
+		this.collisionFile = collisionFile;
 	}
 
-	public RVVectorI getEnv_rgb() {
-		return env_rgb;
+	public RVVectorI getEnvRGB() {
+		return envRGB;
 	}
 
-	public void setEnv_rgb(RVVectorI env_rgb) {
-		this.env_rgb = env_rgb;
+	public void setEnvRGB(RVVectorI envRGB) {
+		this.envRGB = envRGB;
 	}
 
-	public boolean isFrontend_bestTime() {
-		return frontend_bestTime;
+	public boolean isFrontendBestTime() {
+		return frontendBestTime;
 	}
 
-	public void setFrontend_bestTime(boolean frontend_bestTime) {
-		this.frontend_bestTime = frontend_bestTime;
+	public void setFrontendBestTime(boolean frontendBestTime) {
+		this.frontendBestTime = frontendBestTime;
 	}
 
-	public boolean isFrontend_selectable() {
-		return frontend_selectable;
+	public boolean isFrontendSelectable() {
+		return frontendSelectable;
 	}
 
-	public void setFrontend_selectable(boolean frontend_selectable) {
-		this.frontend_selectable = frontend_selectable;
+	public void setFrontendSelectable(boolean frontendSelectable) {
+		this.frontendSelectable = frontendSelectable;
 	}
 
-	public int getFrontend_engine_type() {
-		return frontend_engine_type;
+	public int getFrontendEngineType() {
+		return frontendEngineType;
 	}
 
-	public void setFrontend_engine_type(int frontend_engine_type) {
-		this.frontend_engine_type = frontend_engine_type;
+	public void setFrontendEngineType(int frontendEngineType) {
+		this.frontendEngineType = frontendEngineType;
 	}
 
-	public int getFrontend_obtain_method() {
-		return frontend_obtain_method;
+	public int getFrontendObtainMethod() {
+		return frontendObtainMethod;
 	}
 
-	public void setFrontend_obtain_method(int frontend_obtain_method) {
-		this.frontend_obtain_method = frontend_obtain_method;
+	public void setFrontendObtainMethod(int frontendObtainMethod) {
+		this.frontendObtainMethod = frontendObtainMethod;
 	}
 
-	public int getFrontend_skill_level() {
-		return frontend_skill_level;
+	public int getFrontendSkillLevel() {
+		return frontendSkillLevel;
 	}
 
-	public void setFrontend_skill_level(int frontend_skill_level) {
-		this.frontend_skill_level = frontend_skill_level;
+	public void setFrontendSkillLevel(int frontendSkillLevel) {
+		this.frontendSkillLevel = frontendSkillLevel;
 	}
 
-	public float getFrontend_top_speed() {
-		return frontend_top_speed;
+	public float getFrontendTopSpeed() {
+		return frontendTopSpeed;
 	}
 
-	public void setFrontend_top_speed(float frontend_top_speed) {
-		this.frontend_top_speed = frontend_top_speed;
+	public void setFrontendTopSpeed(float frontendTopSpeed) {
+		this.frontendTopSpeed = frontendTopSpeed;
 	}
 
-	public float getFrontend_acceleration() {
-		return frontend_acceleration;
+	public float getFrontendAcceleration() {
+		return frontendAcceleration;
 	}
 
-	public void setFrontend_acceleration(float frontend_acceleration) {
-		this.frontend_acceleration = frontend_acceleration;
+	public void setFrontendAcceleration(float frontendAcceleration) {
+		this.frontendAcceleration = frontendAcceleration;
 	}
 
-	public float getFrontend_weight() {
-		return frontend_weight;
+	public float getFrontendWeight() {
+		return frontendWeight;
 	}
 
-	public void setFrontend_weight(float frontend_weight) {
-		this.frontend_weight = frontend_weight;
+	public void setFrontendWeight(float frontendWeight) {
+		this.frontendWeight = frontendWeight;
 	}
 
-	public float getFrontend_handling() {
-		return frontend_handling;
+	public float getFrontendHandling() {
+		return frontendHandling;
 	}
 
-	public void setFrontend_handling(float frontend_handling) {
-		this.frontend_handling = frontend_handling;
+	public void setFrontendHandling(float frontendHandling) {
+		this.frontendHandling = frontendHandling;
 	}
 
-	public int getFrontend_transmission_type() {
-		return frontend_transmission_type;
+	public int getFrontendTransmissionType() {
+		return frontendTransmissionType;
 	}
 
-	public void setFrontend_transmission_type(int frontend_transmission_type) {
-		this.frontend_transmission_type = frontend_transmission_type;
+	public void setFrontendTransmissionType(int frontendTransmissionType) {
+		this.frontendTransmissionType = frontendTransmissionType;
 	}
 
-	public float getFrontend_max_revs() {
-		return frontend_max_revs;
+	public float getFrontendMaxRevs() {
+		return frontendMaxRevs;
 	}
 
-	public void setFrontend_max_revs(float frontend_max_revs) {
-		this.frontend_max_revs = frontend_max_revs;
+	public void setFrontendMaxRevs(float frontendMaxRevs) {
+		this.frontendMaxRevs = frontendMaxRevs;
 	}
 
-	public float getSteer_rate() {
-		return steer_rate;
+	public float getSteerRate() {
+		return steerRate;
 	}
 
-	public void setSteer_rate(float steer_rate) {
-		this.steer_rate = steer_rate;
+	public void setSteerRate(float steerRate) {
+		this.steerRate = steerRate;
 	}
 
-	public float getSteer_mod() {
-		return steer_mod;
+	public float getSteerMod() {
+		return steerMod;
 	}
 
-	public void setSteer_mod(float steer_mod) {
-		this.steer_mod = steer_mod;
+	public void setSteerMod(float steerMod) {
+		this.steerMod = steerMod;
 	}
 
-	public float getEngine_rate() {
-		return engine_rate;
+	public float getEngineRate() {
+		return engineRate;
 	}
 
-	public void setEngine_rate(float engine_rate) {
-		this.engine_rate = engine_rate;
+	public void setEngineRate(float engineRate) {
+		this.engineRate = engineRate;
 	}
 
-	public float getTop_speed() {
-		return top_speed;
+	public float getTopSpeed() {
+		return topSpeed;
 	}
 
-	public void setTop_speed(float top_speed) {
-		this.top_speed = top_speed;
+	public void setTopSpeed(float topSpeed) {
+		this.topSpeed = topSpeed;
 	}
 
-	public float getDown_force_mod() {
-		return down_force_mod;
+	public float getDownForceMod() {
+		return downForceMod;
 	}
 
-	public void setDown_force_mod(float down_force_mod) {
-		this.down_force_mod = down_force_mod;
+	public void setDownForceMod(float downForceMod) {
+		this.downForceMod = downForceMod;
 	}
 
-	public RVVectorF getCenter_of_mass() {
-		return center_of_mass;
+	public RVVectorF getCenterOfMass() {
+		return centerOfMass;
 	}
 
-	public void setCenter_of_mass(RVVectorF center_of_mass) {
-		this.center_of_mass = center_of_mass;
+	public void setCenterOfMass(RVVectorF centerOfMass) {
+		this.centerOfMass = centerOfMass;
 	}
 
-	public RVVectorF getWeapon_offset() {
-		return weapon_offset;
+	public RVVectorF getWeaponOffset() {
+		return weaponOffset;
 	}
 
-	public void setWeapon_offset(RVVectorF weapon_offset) {
-		this.weapon_offset = weapon_offset;
+	public void setWeaponOffset(RVVectorF weaponOffset) {
+		this.weaponOffset = weaponOffset;
 	}
 
 	public BodyDetails getBody() {
@@ -1112,4 +1114,5 @@ public class RVCarParameters extends RVParameters {
 	public void setAi(AIDetails ai) {
 		this.ai = ai;
 	}
+	
 }

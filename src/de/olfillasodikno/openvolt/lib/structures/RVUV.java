@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVUV extends RvStruct {
+public class RVUV implements RvStruct {
 
 	private float u;
 	private float v;

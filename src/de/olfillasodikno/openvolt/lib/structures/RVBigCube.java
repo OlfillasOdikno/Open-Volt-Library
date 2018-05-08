@@ -2,22 +2,22 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVBigCube extends RvStruct {
+public class RVBigCube implements RvStruct {
 
 	private RVVectorF center;
 
 	private float size;
 
-	private int mesh_count;
+	private int meshCount;
 
-	private int[] mesh_indices;
+	private int[] meshIndices;
 
 	@Override
 	public void encode(ByteBuffer buf) {
 		center.encode(buf);
 		buf.putFloat(size);
-		buf.putInt(mesh_count);
-		for(int i : mesh_indices) {
+		buf.putInt(meshCount);
+		for (int i : meshIndices) {
 			buf.putInt(i);
 		}
 	}
@@ -27,10 +27,10 @@ public class RVBigCube extends RvStruct {
 		center = new RVVectorF();
 		center.decode(buf);
 		size = buf.getFloat();
-		mesh_count = buf.getInt();
-		mesh_indices = new int[mesh_count];
-		for (int i = 0; i < mesh_count; i++) {
-			mesh_indices[i] = buf.getInt();
+		meshCount = buf.getInt();
+		meshIndices = new int[meshCount];
+		for (int i = 0; i < meshCount; i++) {
+			meshIndices[i] = buf.getInt();
 		}
 	}
 
@@ -50,20 +50,20 @@ public class RVBigCube extends RvStruct {
 		this.size = size;
 	}
 
-	public int getMesh_count() {
-		return mesh_count;
+	public int getMeshCount() {
+		return meshCount;
 	}
 
-	public void setMesh_count(int mesh_count) {
-		this.mesh_count = mesh_count;
+	public void setMeshCount(int meshCount) {
+		this.meshCount = meshCount;
 	}
 
-	public int[] getMesh_indices() {
-		return mesh_indices;
+	public int[] getMeshIndices() {
+		return meshIndices;
 	}
 
-	public void setMesh_indices(int[] mesh_indices) {
-		this.mesh_indices = mesh_indices;
+	public void setMeshIndices(int[] meshIndices) {
+		this.meshIndices = meshIndices;
 	}
 
 }

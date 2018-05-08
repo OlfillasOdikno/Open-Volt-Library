@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVVertex extends RvStruct {
+public class RVVertex  implements RvStruct  {
 
 	private RVVectorF position;
 	private RVVectorF normal;

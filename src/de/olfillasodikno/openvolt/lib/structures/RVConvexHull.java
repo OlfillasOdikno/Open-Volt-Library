@@ -2,11 +2,11 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVConvexHull extends RvStruct {
+public class RVConvexHull implements RvStruct  {
 
-	private short point_count;
-	private short edge_count;
-	private short face_count;
+	private short pointCount;
+	private short edgeCount;
+	private short faceCount;
 
 	private RVBoundingBox bbox;
 
@@ -18,9 +18,9 @@ public class RVConvexHull extends RvStruct {
 
 	@Override
 	public void encode(ByteBuffer buf) {
-		buf.putShort(point_count);
-		buf.putShort(edge_count);
-		buf.putShort(face_count);
+		buf.putShort(pointCount);
+		buf.putShort(edgeCount);
+		buf.putShort(faceCount);
 		bbox.encode(buf);
 		offset.encode(buf);
 
@@ -40,9 +40,9 @@ public class RVConvexHull extends RvStruct {
 	@Override
 	public void decode(ByteBuffer buf) {
 		
-		point_count = buf.getShort();
-		edge_count = buf.getShort();
-		face_count = buf.getShort();
+		pointCount = buf.getShort();
+		edgeCount = buf.getShort();
+		faceCount = buf.getShort();
 		
 		bbox = new RVBoundingBox();
 		bbox.decode(buf);
@@ -50,21 +50,21 @@ public class RVConvexHull extends RvStruct {
 		offset = new RVVectorF();
 		offset.decode(buf);
 
-		points = new RVVectorF[point_count];
+		points = new RVVectorF[pointCount];
 
 		for (int i = 0; i < points.length; i++) {
 			points[i] = new RVVectorF();
 			points[i].decode(buf);
 		}
 		
-		edges = new RVEdge[edge_count];
+		edges = new RVEdge[edgeCount];
 
 		for (int i = 0; i < edges.length; i++) {
 			edges[i] = new RVEdge();
 			edges[i].decode(buf);
 		}
 		
-		faces = new RVFace[face_count];
+		faces = new RVFace[faceCount];
 
 		for (int i = 0; i < faces.length; i++) {
 			faces[i] = new RVFace();
@@ -72,28 +72,30 @@ public class RVConvexHull extends RvStruct {
 		}
 	}
 
-	public short getPoint_count() {
-		return point_count;
+	
+
+	public short getPointCount() {
+		return pointCount;
 	}
 
-	public void setPoint_count(short point_count) {
-		this.point_count = point_count;
+	public void setPointCount(short pointCount) {
+		this.pointCount = pointCount;
 	}
 
-	public short getEdge_count() {
-		return edge_count;
+	public short getEdgeCount() {
+		return edgeCount;
 	}
 
-	public void setEdge_count(short edge_count) {
-		this.edge_count = edge_count;
+	public void setEdgeCount(short edgeCount) {
+		this.edgeCount = edgeCount;
 	}
 
-	public short getFace_count() {
-		return face_count;
+	public short getFaceCount() {
+		return faceCount;
 	}
 
-	public void setFace_count(short face_count) {
-		this.face_count = face_count;
+	public void setFaceCount(short faceCount) {
+		this.faceCount = faceCount;
 	}
 
 	public RVBoundingBox getBbox() {

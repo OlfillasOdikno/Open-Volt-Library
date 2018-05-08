@@ -1,6 +1,6 @@
 package de.olfillasodikno.openvolt.lib.structures.parameters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.olfillasodikno.openvolt.lib.structures.RVVectorF;
 
@@ -11,7 +11,7 @@ public class RVVectorFWrapper extends ParamWrapper<RVVectorF> {
 	}
 
 	@Override
-	public boolean wrap(ArrayList<Object> data, RVVectorF in) {
+	public boolean wrap(List<Object> data, RVVectorF in) {
 		if (data.size() != 3) {
 			return false;
 		}
@@ -27,16 +27,6 @@ public class RVVectorFWrapper extends ParamWrapper<RVVectorF> {
 		}
 		if (z instanceof Integer) {
 			z = ((Integer) z).floatValue();
-		}
-
-		if (x instanceof Float) {
-			x = ((Float) x).floatValue();
-		}
-		if (y instanceof Float) {
-			y = ((Float) y).floatValue();
-		}
-		if (z instanceof Float) {
-			z = ((Float) z).floatValue();
 		}
 		if (!(x instanceof Float && y instanceof Float && z instanceof Float)) {
 			return false;

@@ -2,23 +2,23 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVMeshHeader extends RvStruct {
+public class RVMeshHeader  implements RvStruct  {
 
-	private RVSphere bound_ball;
+	private RVSphere boundBall;
 
 	private RVBoundingBox bbox;
 
 	@Override
 	public void encode(ByteBuffer buf) {
-		bound_ball.encode(buf);
+		boundBall.encode(buf);
 
 		bbox.encode(buf);
 	}
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		bound_ball = new RVSphere();
-		bound_ball.decode(buf);
+		boundBall = new RVSphere();
+		boundBall.decode(buf);
 
 		bbox = new RVBoundingBox();
 		bbox.decode(buf);
@@ -33,12 +33,14 @@ public class RVMeshHeader extends RvStruct {
 		this.bbox = bbox;
 	}
 
-	public RVSphere getBound_ball() {
-		return bound_ball;
+	public RVSphere getBoundBall() {
+		return boundBall;
 	}
 
-	public void setBound_ball(RVSphere bound_ball) {
-		this.bound_ball = bound_ball;
+	public void setBoundBall(RVSphere boundBall) {
+		this.boundBall = boundBall;
 	}
+
+
 
 }

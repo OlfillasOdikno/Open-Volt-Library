@@ -2,10 +2,10 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVMeshBody extends RvStruct {
+public class RVMeshBody implements RvStruct {
 
-	private short polygon_count;
-	private short vertex_count;
+	private short polygonCount;
+	private short vertexCount;
 
 	private RVPolygon[] polygons;
 	private RVVertex[] vertices;
@@ -13,8 +13,8 @@ public class RVMeshBody extends RvStruct {
 	@Override
 	public void encode(ByteBuffer buf) {
 
-		buf.putShort(polygon_count);
-		buf.putShort(vertex_count);
+		buf.putShort(polygonCount);
+		buf.putShort(vertexCount);
 
 		for (RVPolygon poly : polygons) {
 			poly.encode(buf);
@@ -27,16 +27,16 @@ public class RVMeshBody extends RvStruct {
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		polygon_count = buf.getShort();
-		vertex_count = buf.getShort();
+		polygonCount = buf.getShort();
+		vertexCount = buf.getShort();
 
-		polygons = new RVPolygon[polygon_count];
+		polygons = new RVPolygon[polygonCount];
 		for (int i = 0; i < polygons.length; i++) {
 			polygons[i] = new RVPolygon();
 			polygons[i].decode(buf);
 		}
 
-		vertices = new RVVertex[vertex_count];
+		vertices = new RVVertex[vertexCount];
 
 		for (int i = 0; i < vertices.length; i++) {
 			vertices[i] = new RVVertex();
@@ -44,20 +44,20 @@ public class RVMeshBody extends RvStruct {
 		}
 	}
 
-	public short getPolygon_count() {
-		return polygon_count;
+	public short getPolygonCount() {
+		return polygonCount;
 	}
 
-	public void setPolygon_count(short polygon_count) {
-		this.polygon_count = polygon_count;
+	public void setPolygonCount(short polygonCount) {
+		this.polygonCount = polygonCount;
 	}
 
-	public short getVertex_count() {
-		return vertex_count;
+	public short getVertexCount() {
+		return vertexCount;
 	}
 
-	public void setVertex_count(short vertex_count) {
-		this.vertex_count = vertex_count;
+	public void setVertexCount(short vertexCount) {
+		this.vertexCount = vertexCount;
 	}
 
 	public RVPolygon[] getPolygons() {

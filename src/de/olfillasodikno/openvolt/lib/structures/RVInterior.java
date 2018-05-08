@@ -2,14 +2,14 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVInterior extends RvStruct {
+public class RVInterior implements RvStruct {
 
-	private short sphere_count;
+	private short sphereCount;
 	private RVSphere[] spheres;
 
 	@Override
 	public void encode(ByteBuffer buf) {
-		buf.putShort(sphere_count);
+		buf.putShort(sphereCount);
 		for (RVSphere s : spheres) {
 			s.encode(buf);
 		}
@@ -17,20 +17,20 @@ public class RVInterior extends RvStruct {
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		sphere_count = buf.getShort();
-		spheres = new RVSphere[sphere_count];
+		sphereCount = buf.getShort();
+		spheres = new RVSphere[sphereCount];
 		for (int i = 0; i < spheres.length; i++) {
 			spheres[i] = new RVSphere();
 			spheres[i].decode(buf);
 		}
 	}
 
-	public short getSphere_count() {
-		return sphere_count;
+	public short getSphereCount() {
+		return sphereCount;
 	}
 
-	public void setSphere_count(short sphere_count) {
-		this.sphere_count = sphere_count;
+	public void setSphereCount(short sphereCount) {
+		this.sphereCount = sphereCount;
 	}
 
 	public RVSphere[] getSpheres() {

@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVMesh extends RvStruct {
+public class RVMesh  implements RvStruct  {
 
 	private RVMeshHeader header;
 	private RVMeshBody body;

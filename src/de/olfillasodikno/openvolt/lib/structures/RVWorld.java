@@ -2,39 +2,37 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVWorld extends RvStruct {
+public class RVWorld implements RvStruct {
 
-	private int mesh_count;
+	private int meshCount;
 	private RVMesh[] meshes;
 
-	private int bigcube_count;
+	private int bigcubeCount;
 	private RVBigCube[] bcube;
 
-	private int animation_count;
+	private int animationCount;
 	private RVTexAnimation[] anim;
 
-	@Override
 	public void encode(ByteBuffer buf) {
-		buf.putInt(mesh_count);
+		buf.putInt(meshCount);
 		for (RVMesh mesh : meshes) {
 			mesh.encode(buf);
 		}
 
-		buf.putInt(bigcube_count);
+		buf.putInt(bigcubeCount);
 		for (RVBigCube cube : bcube) {
 			cube.encode(buf);
 		}
 
-		buf.putInt(animation_count);
+		buf.putInt(animationCount);
 		for (RVTexAnimation a : anim) {
 			a.encode(buf);
 		}
 	}
 
-	@Override
 	public void decode(ByteBuffer buf) {
-		mesh_count = buf.getInt();
-		meshes = new RVMesh[mesh_count];
+		meshCount = buf.getInt();
+		meshes = new RVMesh[meshCount];
 		for (int i = 0; i < meshes.length; i++) {
 			meshes[i] = new RVMesh();
 			meshes[i].decode(buf);
@@ -42,8 +40,8 @@ public class RVWorld extends RvStruct {
 		if(buf.remaining() == 0) {
 			return;
 		}
-		bigcube_count = buf.getInt();
-		bcube = new RVBigCube[bigcube_count];
+		bigcubeCount = buf.getInt();
+		bcube = new RVBigCube[bigcubeCount];
 		for (int i = 0; i < bcube.length; i++) {
 			bcube[i] = new RVBigCube();
 			bcube[i].decode(buf);
@@ -51,20 +49,20 @@ public class RVWorld extends RvStruct {
 		if(buf.remaining() == 0) {
 			return;
 		}
-		animation_count = buf.getInt();
-		anim = new RVTexAnimation[animation_count];
+		animationCount = buf.getInt();
+		anim = new RVTexAnimation[animationCount];
 		for (int i = 0; i < anim.length; i++) {
 			anim[i] = new RVTexAnimation();
 			anim[i].decode(buf);
 		}
 	}
 
-	public int getMesh_count() {
-		return mesh_count;
+	public int getMeshCount() {
+		return meshCount;
 	}
 
-	public void setMesh_count(int mesh_count) {
-		this.mesh_count = mesh_count;
+	public void setMeshCount(int meshCount) {
+		this.meshCount = meshCount;
 	}
 
 	public RVMesh[] getMeshes() {
@@ -75,12 +73,12 @@ public class RVWorld extends RvStruct {
 		this.meshes = meshes;
 	}
 
-	public int getBigcube_count() {
-		return bigcube_count;
+	public int getBigcubeCount() {
+		return bigcubeCount;
 	}
 
-	public void setBigcube_count(int bigcube_count) {
-		this.bigcube_count = bigcube_count;
+	public void setBigcubeCount(int bigcubeCount) {
+		this.bigcubeCount = bigcubeCount;
 	}
 
 	public RVBigCube[] getBcube() {
@@ -91,12 +89,12 @@ public class RVWorld extends RvStruct {
 		this.bcube = bcube;
 	}
 
-	public int getAnimation_count() {
-		return animation_count;
+	public int getAnimationCount() {
+		return animationCount;
 	}
 
-	public void setAnimation_count(int animation_count) {
-		this.animation_count = animation_count;
+	public void setAnimationCount(int animationCount) {
+		this.animationCount = animationCount;
 	}
 
 	public RVTexAnimation[] getAnim() {
@@ -106,5 +104,6 @@ public class RVWorld extends RvStruct {
 	public void setAnim(RVTexAnimation[] anim) {
 		this.anim = anim;
 	}
+
 
 }

@@ -2,11 +2,14 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVBoundingBox extends RvStruct {
+public class RVBoundingBox implements RvStruct  {
 
-	private float xMin, xMax;
-	private float yMin, yMax;
-	private float zMin, zMax;
+	private float xMin;
+	private float xMax;
+	private float yMin;
+	private float yMax;
+	private float zMin;
+	private float zMax;
 
 	@Override
 	public void encode(ByteBuffer buf) {

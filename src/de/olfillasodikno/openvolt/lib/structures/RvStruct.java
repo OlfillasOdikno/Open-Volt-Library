@@ -2,9 +2,9 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public abstract class RvStruct {
+public interface RvStruct {
 	
-	public abstract void encode(ByteBuffer buf);
-	public abstract void decode(ByteBuffer buf);
+	public void encode(ByteBuffer buf);
+	public void decode(ByteBuffer buf);
 	
 }

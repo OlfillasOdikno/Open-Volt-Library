@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVFace extends RvStruct {
+public class RVFace  implements RvStruct  {
 
 	private RVVectorF normal;
 	private float distance;

@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVEdge extends RvStruct {
+public class RVEdge  implements RvStruct  {
 
 	private short a;
 	private short b;

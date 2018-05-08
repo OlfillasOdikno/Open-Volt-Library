@@ -2,25 +2,25 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVPolygon extends RvStruct {
+public class RVPolygon  implements RvStruct  {
 
 	private short type;
 	private short texture;
-	private short[] vertex_indices = new short[4];
+	private short[] vertexIndices = new short[4];
 	private int[] colors = new int[4];
 	private RVUV[] texcoord = new RVUV[4];
 
 	private boolean quadratic;
-	private boolean double_sided;
+	private boolean doubleSided;
 	private boolean translucent;
 	private boolean additive;
-	private boolean enable_env_mapping;
+	private boolean enableEnvMapping;
 
 	@Override
 	public void encode(ByteBuffer buf) {
 		buf.putShort(type);
 		buf.putShort(texture);
-		for (short s : vertex_indices) {
+		for (short s : vertexIndices) {
 			buf.putShort(s);
 		}
 		for (int i : colors) {
@@ -36,8 +36,8 @@ public class RVPolygon extends RvStruct {
 	public void decode(ByteBuffer buf) {
 		type = buf.getShort();
 		texture = buf.getShort();
-		for (int i = 0; i < vertex_indices.length; i++) {
-			vertex_indices[i] = buf.getShort();
+		for (int i = 0; i < vertexIndices.length; i++) {
+			vertexIndices[i] = buf.getShort();
 		}
 
 		for (int i = 0; i < colors.length; i++) {
@@ -68,14 +68,7 @@ public class RVPolygon extends RvStruct {
 		this.texture = texture;
 	}
 
-	public short[] getVertex_indices() {
-		return vertex_indices;
-	}
-
-	public void setVertex_indices(short[] vertex_indices) {
-		this.vertex_indices = vertex_indices;
-	}
-
+	
 	public int[] getColors() {
 		return colors;
 	}
@@ -100,13 +93,6 @@ public class RVPolygon extends RvStruct {
 		this.quadratic = quadratic;
 	}
 
-	public boolean isDouble_sided() {
-		return double_sided;
-	}
-
-	public void setDouble_sided(boolean double_sided) {
-		this.double_sided = double_sided;
-	}
 
 	public boolean isTranslucent() {
 		return translucent;
@@ -124,20 +110,36 @@ public class RVPolygon extends RvStruct {
 		this.additive = additive;
 	}
 
-	public boolean isEnable_env_mapping() {
-		return enable_env_mapping;
+	public short[] getVertexIndices() {
+		return vertexIndices;
 	}
 
-	public void setEnable_env_mapping(boolean enable_env_mapping) {
-		this.enable_env_mapping = enable_env_mapping;
+	public void setVertexIndices(short[] vertexIndices) {
+		this.vertexIndices = vertexIndices;
+	}
+
+	public boolean isDoubleSided() {
+		return doubleSided;
+	}
+
+	public void setDoubleSided(boolean doubleSided) {
+		this.doubleSided = doubleSided;
+	}
+
+	public boolean isEnableEnvMapping() {
+		return enableEnvMapping;
+	}
+
+	public void setEnableEnvMapping(boolean enableEnvMapping) {
+		this.enableEnvMapping = enableEnvMapping;
 	}
 
 	public void mode(){
 		quadratic = isBitSet(0);
-		double_sided = isBitSet(1);
+		doubleSided = isBitSet(1);
 		translucent = isBitSet(2);
 		additive = isBitSet(8);
-		enable_env_mapping = isBitSet(11);
+		enableEnvMapping = isBitSet(11);
 	}
 	
 	public boolean isBitSet(int index) {

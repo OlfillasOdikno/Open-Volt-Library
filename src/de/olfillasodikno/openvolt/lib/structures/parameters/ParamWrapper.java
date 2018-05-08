@@ -1,6 +1,6 @@
 package de.olfillasodikno.openvolt.lib.structures.parameters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ParamWrapper<V> {
 	
@@ -14,9 +14,9 @@ public abstract class ParamWrapper<V> {
 		return wrapping;
 	}
 
-	protected abstract boolean wrap(ArrayList<Object> data, V in);
+	protected abstract boolean wrap(List<Object> data, V in);
 	
-	public V wrap(ArrayList<Object> data) {
+	public V wrap(List<Object> data) {
 		try {
 			@SuppressWarnings("unchecked")
 			V o = (V) wrapping.newInstance();
@@ -24,7 +24,7 @@ public abstract class ParamWrapper<V> {
 				return o;				
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
+			return null;
 		}
 		return null;
 	}

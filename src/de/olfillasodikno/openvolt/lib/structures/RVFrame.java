@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVFrame extends RvStruct {
+public class RVFrame  implements RvStruct  {
 
 	private int texture;
 	private float delay;

@@ -13,6 +13,9 @@ import de.olfillasodikno.openvolt.lib.structures.parameters.RVParameters;
 
 public class RVReader {
 
+	private RVReader() {
+	}
+
 	public static RVWorld worldFromFile(File f) throws IOException {
 		ByteBuffer buf = ByteBuffer.wrap(Files.readAllBytes(f.toPath()));
 		buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -38,8 +41,7 @@ public class RVReader {
 	}
 
 	public static RVParameters paramFromFile(File f) throws IOException {
-		RVParameters parameters = RVParameters.fromFile(f);
-		return parameters;
+		return RVParameters.fromFile(f);
 	}
 
 }

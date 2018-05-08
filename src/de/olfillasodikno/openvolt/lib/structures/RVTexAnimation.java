@@ -2,23 +2,23 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVTexAnimation extends RvStruct {
+public class RVTexAnimation implements RvStruct {
 
-	private int frame_count;
+	private int frameCount;
 	private RVFrame[] frames;
 
 	@Override
 	public void encode(ByteBuffer buf) {
-		buf.putInt(frame_count);
-		for(RVFrame frame : frames) {
+		buf.putInt(frameCount);
+		for (RVFrame frame : frames) {
 			frame.encode(buf);
 		}
 	}
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		frame_count = buf.getInt();
-		frames = new RVFrame[frame_count];
+		frameCount = buf.getInt();
+		frames = new RVFrame[frameCount];
 		for (int i = 0; i < frames.length; i++) {
 			RVFrame frame = new RVFrame();
 			frame.decode(buf);
@@ -26,12 +26,12 @@ public class RVTexAnimation extends RvStruct {
 		}
 	}
 
-	public int getFrame_count() {
-		return frame_count;
+	public int getFrameCount() {
+		return frameCount;
 	}
 
-	public void setFrame_count(int frame_count) {
-		this.frame_count = frame_count;
+	public void setFrameCount(int frameCount) {
+		this.frameCount = frameCount;
 	}
 
 	public RVFrame[] getFrames() {

@@ -1,6 +1,6 @@
 package de.olfillasodikno.openvolt.lib.structures.parameters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.olfillasodikno.openvolt.lib.structures.RVVectorI;
 
@@ -12,7 +12,7 @@ public class RVVectorIWrapper extends ParamWrapper<RVVectorI>{
 	}
 
 	@Override
-	public boolean wrap(ArrayList<Object> data, RVVectorI in) {
+	public boolean wrap(List<Object> data, RVVectorI in) {
 		if(data.size()!=3) {
 			return false;
 		}
