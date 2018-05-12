@@ -35,4 +35,9 @@ public class RVSphere implements RvStruct  {
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
+
+	@Override
+	public int getNumBytes() {
+		return 4+center.getNumBytes();
+	}
 }

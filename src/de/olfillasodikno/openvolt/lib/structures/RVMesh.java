@@ -37,4 +37,9 @@ public class RVMesh  implements RvStruct  {
 		this.body = body;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return header.getNumBytes()+body.getNumBytes();
+	}
+
 }

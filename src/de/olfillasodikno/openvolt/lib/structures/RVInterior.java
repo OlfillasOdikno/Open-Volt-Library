@@ -41,4 +41,13 @@ public class RVInterior implements RvStruct {
 		this.spheres = spheres;
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 2;
+		if (sphereCount > 0 && spheres[0] != null) {
+			ret += sphereCount * spheres[0].getNumBytes();
+		}
+		return ret;
+	}
+
 }

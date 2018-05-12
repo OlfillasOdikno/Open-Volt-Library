@@ -36,4 +36,9 @@ public class RVFace  implements RvStruct  {
 		this.distance = distance;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return normal.getNumBytes()+4;
+	}
+
 }

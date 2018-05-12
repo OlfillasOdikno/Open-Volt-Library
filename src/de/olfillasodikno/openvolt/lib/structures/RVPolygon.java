@@ -146,4 +146,13 @@ public class RVPolygon  implements RvStruct  {
 		return (((type >>> index) & 1) != 0);
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 2*2+vertexIndices.length*2+colors.length*4;
+		if(texcoord.length>0 && texcoord[0] != null) {
+			ret += texcoord.length*texcoord[0].getNumBytes();
+		}
+		return ret;
+	}
+
 }

@@ -42,4 +42,13 @@ public class RVTexAnimation implements RvStruct {
 		this.frames = frames;
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 4;
+		if (frameCount> 0 && frames[0] != null) {
+			ret += frameCount * frames[0].getNumBytes();
+		}
+		return ret;
+	}
+
 }

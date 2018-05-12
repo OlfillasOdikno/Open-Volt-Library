@@ -59,4 +59,16 @@ public class RVHull implements RvStruct {
 		this.interior = interior;
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 2+interior.getNumBytes();
+//		if (convexHullCount > 0 && convexHulls[0] != null) {
+//			ret += convexHullCount * convexHulls[0].getNumBytes();
+//		}
+		for(int i = 0; i< convexHulls.length; i++) {
+			ret += convexHulls[i].getNumBytes();
+		}
+		return ret;
+	}
+
 }

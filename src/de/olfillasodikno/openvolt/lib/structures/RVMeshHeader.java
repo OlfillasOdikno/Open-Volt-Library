@@ -41,6 +41,11 @@ public class RVMeshHeader  implements RvStruct  {
 		this.boundBall = boundBall;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return boundBall.getNumBytes()+bbox.getNumBytes();
+	}
+
 
 
 }

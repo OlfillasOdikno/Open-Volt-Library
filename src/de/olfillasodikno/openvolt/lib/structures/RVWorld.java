@@ -13,6 +13,8 @@ public class RVWorld implements RvStruct {
 	private int animationCount;
 	private RVTexAnimation[] anim;
 
+	private int[] envColors;
+
 	public void encode(ByteBuffer buf) {
 		buf.putInt(meshCount);
 		for (RVMesh mesh : meshes) {
@@ -28,16 +30,27 @@ public class RVWorld implements RvStruct {
 		for (RVTexAnimation a : anim) {
 			a.encode(buf);
 		}
+
+		for (int colors : envColors) {
+			buf.putInt(colors);
+		}
 	}
 
 	public void decode(ByteBuffer buf) {
+		int envCount = 0;
 		meshCount = buf.getInt();
 		meshes = new RVMesh[meshCount];
 		for (int i = 0; i < meshes.length; i++) {
 			meshes[i] = new RVMesh();
 			meshes[i].decode(buf);
+			RVPolygon[] polygons = meshes[i].getBody().getPolygons();
+			for (RVPolygon polygon : polygons) {
+				if (polygon.isBitSet(11)) {
+					envCount++;
+				}
+			}
 		}
-		if(buf.remaining() == 0) {
+		if (buf.remaining() == 0) {
 			return;
 		}
 		bigcubeCount = buf.getInt();
@@ -46,7 +59,7 @@ public class RVWorld implements RvStruct {
 			bcube[i] = new RVBigCube();
 			bcube[i].decode(buf);
 		}
-		if(buf.remaining() == 0) {
+		if (buf.remaining() == 0) {
 			return;
 		}
 		animationCount = buf.getInt();
@@ -54,6 +67,10 @@ public class RVWorld implements RvStruct {
 		for (int i = 0; i < anim.length; i++) {
 			anim[i] = new RVTexAnimation();
 			anim[i].decode(buf);
+		}
+		envColors = new int[envCount];
+		for (int i = 0; i < envCount; i++) {
+			envColors[i]=buf.getInt();
 		}
 	}
 
@@ -89,6 +106,16 @@ public class RVWorld implements RvStruct {
 		this.bcube = bcube;
 	}
 
+
+
+	public int[] getEnvColors() {
+		return envColors;
+	}
+
+	public void setEnvColors(int[] envColors) {
+		this.envColors = envColors;
+	}
+
 	public int getAnimationCount() {
 		return animationCount;
 	}
@@ -105,5 +132,19 @@ public class RVWorld implements RvStruct {
 		this.anim = anim;
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 4 * 4 + envColors.length *4;
+		for (int i = 0; i < meshCount; i++) {
+			ret += meshes[i].getNumBytes();
+		}
+		for (int i = 0; i < bigcubeCount; i++) {
+			ret += bcube[i].getNumBytes();
+		}
+		for (int i = 0; i < animationCount; i++) {
+			ret += anim[i].getNumBytes();
+		}
+		return ret;
+	}
 
 }

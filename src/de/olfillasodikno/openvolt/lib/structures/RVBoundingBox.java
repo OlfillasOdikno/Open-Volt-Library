@@ -79,4 +79,9 @@ public class RVBoundingBox implements RvStruct  {
 		this.zMax = zMax;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return 6*4;
+	}
+
 }

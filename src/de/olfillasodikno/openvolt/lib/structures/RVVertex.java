@@ -36,4 +36,9 @@ public class RVVertex  implements RvStruct  {
 	public void setNormal(RVVectorF normal) {
 		this.normal = normal;
 	}
+
+	@Override
+	public int getNumBytes() {
+		return position.getNumBytes()+normal.getNumBytes();
+	}
 }

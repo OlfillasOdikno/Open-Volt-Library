@@ -35,4 +35,9 @@ public class RVUV implements RvStruct {
 		this.v = v;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return 2*4;
+	}
+
 }

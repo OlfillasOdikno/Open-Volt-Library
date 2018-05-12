@@ -35,4 +35,9 @@ public class RVEdge  implements RvStruct  {
 		this.b = b;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return 2*2;
+	}
+
 }

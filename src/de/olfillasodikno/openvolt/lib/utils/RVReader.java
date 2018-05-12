@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import de.olfillasodikno.openvolt.lib.structures.RVHull;
 import de.olfillasodikno.openvolt.lib.structures.RVMeshBody;
 import de.olfillasodikno.openvolt.lib.structures.RVWorld;
+import de.olfillasodikno.openvolt.lib.structures.RVWorldNCP;
 import de.olfillasodikno.openvolt.lib.structures.parameters.RVParameters;
 
 public class RVReader {
@@ -42,6 +43,14 @@ public class RVReader {
 
 	public static RVParameters paramFromFile(File f) throws IOException {
 		return RVParameters.fromFile(f);
+	}
+
+	public static RVWorldNCP worldNCPFromFile(File f) throws IOException {
+		ByteBuffer buf = ByteBuffer.wrap(Files.readAllBytes(f.toPath()));
+		buf.order(ByteOrder.LITTLE_ENDIAN);
+		RVWorldNCP ret = new RVWorldNCP();
+		ret.decode(buf);
+		return ret;
 	}
 
 }

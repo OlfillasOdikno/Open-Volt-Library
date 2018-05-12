@@ -66,4 +66,9 @@ public class RVBigCube implements RvStruct {
 		this.meshIndices = meshIndices;
 	}
 
+	@Override
+	public int getNumBytes() {		
+		return center.getNumBytes()+2*4+meshCount*4;
+	}
+
 }

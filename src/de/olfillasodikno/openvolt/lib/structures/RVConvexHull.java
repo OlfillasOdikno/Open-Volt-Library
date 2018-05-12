@@ -2,7 +2,7 @@ package de.olfillasodikno.openvolt.lib.structures;
 
 import java.nio.ByteBuffer;
 
-public class RVConvexHull implements RvStruct  {
+public class RVConvexHull implements RvStruct {
 
 	private short pointCount;
 	private short edgeCount;
@@ -23,11 +23,11 @@ public class RVConvexHull implements RvStruct  {
 		buf.putShort(faceCount);
 		bbox.encode(buf);
 		offset.encode(buf);
-
+				
 		for (RVVectorF point : points) {
 			point.encode(buf);
 		}
-
+		
 		for (RVEdge edge : edges) {
 			edge.encode(buf);
 		}
@@ -39,14 +39,14 @@ public class RVConvexHull implements RvStruct  {
 
 	@Override
 	public void decode(ByteBuffer buf) {
-		
+
 		pointCount = buf.getShort();
 		edgeCount = buf.getShort();
 		faceCount = buf.getShort();
-		
+
 		bbox = new RVBoundingBox();
 		bbox.decode(buf);
-		
+
 		offset = new RVVectorF();
 		offset.decode(buf);
 
@@ -56,14 +56,14 @@ public class RVConvexHull implements RvStruct  {
 			points[i] = new RVVectorF();
 			points[i].decode(buf);
 		}
-		
+
 		edges = new RVEdge[edgeCount];
 
 		for (int i = 0; i < edges.length; i++) {
 			edges[i] = new RVEdge();
 			edges[i].decode(buf);
 		}
-		
+
 		faces = new RVFace[faceCount];
 
 		for (int i = 0; i < faces.length; i++) {
@@ -71,8 +71,6 @@ public class RVConvexHull implements RvStruct  {
 			faces[i].decode(buf);
 		}
 	}
-
-	
 
 	public short getPointCount() {
 		return pointCount;
@@ -136,5 +134,20 @@ public class RVConvexHull implements RvStruct  {
 
 	public void setFaces(RVFace[] faces) {
 		this.faces = faces;
+	}
+
+	@Override
+	public int getNumBytes() {
+		int ret = 3 * 2 + bbox.getNumBytes() + offset.getNumBytes();
+		if (pointCount > 0 && points[0] != null) {
+			ret += pointCount * points[0].getNumBytes();
+		}
+		if (edgeCount > 0 && edges[0] != null) {
+			ret += edgeCount * edges[0].getNumBytes();
+		}
+		if (faceCount > 0 && faces[0] != null) {
+			ret += faceCount * faces[0].getNumBytes();
+		}
+		return ret;
 	}
 }

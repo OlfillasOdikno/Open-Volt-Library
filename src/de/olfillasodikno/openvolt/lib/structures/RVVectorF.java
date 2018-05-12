@@ -46,4 +46,9 @@ public class RVVectorF  implements RvStruct  {
 		this.z = z;
 	}
 
+	@Override
+	public int getNumBytes() {
+		return 3*4;
+	}
+
 }

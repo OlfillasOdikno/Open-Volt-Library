@@ -76,4 +76,16 @@ public class RVMeshBody implements RvStruct {
 		this.vertices = vertices;
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 2 * 2;
+		if (polygonCount > 0 && polygons[0] != null) {
+			ret += polygonCount * polygons[0].getNumBytes();
+		}
+		if (vertexCount > 0 && vertices[0] != null) {
+			ret += vertexCount * vertices[0].getNumBytes();
+		}
+		return ret;
+	}
+
 }

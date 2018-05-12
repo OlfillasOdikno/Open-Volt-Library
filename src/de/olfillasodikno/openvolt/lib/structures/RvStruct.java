@@ -7,4 +7,5 @@ public interface RvStruct {
 	public void encode(ByteBuffer buf);
 	public void decode(ByteBuffer buf);
 	
+	public int getNumBytes();
 }

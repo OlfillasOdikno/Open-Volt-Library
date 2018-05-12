@@ -52,4 +52,13 @@ public class RVFrame  implements RvStruct  {
 		this.uvs = uvs;
 	}
 
+	@Override
+	public int getNumBytes() {
+		int ret = 2*4;
+		if(uvs[0] != null) {
+			ret += uvs.length*uvs[0].getNumBytes();
+		}
+		return ret;
+	}
+
 }
