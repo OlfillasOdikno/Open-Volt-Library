@@ -23,6 +23,8 @@ public class RVParameters {
 
 	private static final char STRING_TOKEN = '"';
 
+	private static final char RV_12_TOKEN = ')';
+
 	protected static final Logger logger = Logger.getLogger(RVParameters.class.getName());
 
 	private final Context root;
@@ -67,14 +69,25 @@ public class RVParameters {
 
 		boolean inString = false;
 
+		boolean newParams = false;
+
 		for (int i = 0; i < line.length(); i++) {
 			char c = chars[i];
 			if (c == COMMENT_TOKEN && !inString) {
-				TypeObject<String> object = new TypeObject<>(Type.COMMENT, line.substring(i, line.length() - 1));
-				types.add(object);
+				if (i < line.length() - 1 && chars[i + 1] == RV_12_TOKEN) {
+					i++;
+					newParams = true;
+					lastParsed = i;
+				} else {
+					TypeObject<String> object = new TypeObject<>(Type.COMMENT, line.substring(i, line.length() - 1));
+					types.add(object);
+				}
 			} else if (c == CONTEXT_BEGIN_TOKEN && !inString) {
 				RawContext context = new RawContext(currentContext);
 				TypeObject<RawContext> object = new TypeObject<>(Type.CONTEXT, context);
+				if(newParams) {
+					object.setNew(true);
+				}
 				types.add(object);
 				lastParsed = i;
 				currentContext = context;
@@ -88,6 +101,9 @@ public class RVParameters {
 				inString = !inString;
 				if (!inString) {
 					TypeObject<String> object = new TypeObject<>(Type.STRING, line.substring(startString, i));
+					if(newParams) {
+						object.setNew(true);
+					}
 					types.add(object);
 					lastParsed = i;
 				} else {
@@ -96,6 +112,9 @@ public class RVParameters {
 			} else if (c == (char) 0x20 || c == (char) 0x09 || i == line.length() - 1) {
 				TypeObject<?> o = parseObject(line, lastParsed, i);
 				if (o != null) {
+					if(newParams) {
+						o.setNew(true);
+					}
 					types.add(o);
 				}
 				lastParsed = i;
@@ -141,6 +160,9 @@ public class RVParameters {
 	}
 
 	private static class TypeObject<V> {
+		
+		private boolean isNew;
+		
 		private final Type type;
 		private final V object;
 
@@ -155,6 +177,14 @@ public class RVParameters {
 
 		public V getObject() {
 			return object;
+		}
+		
+		public void setNew(boolean isNew) {
+			this.isNew = isNew;
+		}
+		
+		public boolean isNew() {
+			return isNew;
 		}
 	}
 
@@ -211,6 +241,9 @@ public class RVParameters {
 					}
 					String descriptorName = (String) descriptor.object;
 					ArrayList<Object> values = new ArrayList<>();
+					if(i == types.size() - 1) {
+						i++;
+					}
 					for (int j = lastName + 1; j < i; j++) {
 						TypeObject<?> obj = types.get(j);
 						if (obj.getType() == Type.COMMENT) {
@@ -277,6 +310,7 @@ public class RVParameters {
 	static {
 		registerWrapper(new RVVectorFWrapper());
 		registerWrapper(new RVVectorIWrapper());
+		registerWrapper(new RVOffsetsFWrapper());
 	}
 
 	public void decode() {
@@ -286,16 +320,19 @@ public class RVParameters {
 	private static void decodeContext(Context current, Class<?> clazz, Object instance) {
 		Map<String, Field> params = new HashMap<>();
 		Map<String, Field> contexts = new HashMap<>();
-		for (Field f : clazz.getDeclaredFields()) {
-			if (!f.isAnnotationPresent(Param.class)) {
-				continue;
+		while(clazz != RVParameters.class && clazz != null) {
+			for (Field f : clazz.getDeclaredFields()) {
+				if (!f.isAnnotationPresent(Param.class)) {
+					continue;
+				}
+				Param p = f.getAnnotation(Param.class);
+				if (p.type() == ParamType.NORMAL) {
+					params.put(p.value(), f);
+				} else if (p.type() == ParamType.CONTEXT) {
+					contexts.put(p.value(), f);
+				}
 			}
-			Param p = f.getAnnotation(Param.class);
-			if (p.type() == ParamType.NORMAL) {
-				params.put(p.value(), f);
-			} else if (p.type() == ParamType.CONTEXT) {
-				contexts.put(p.value(), f);
-			}
+			clazz = clazz.getSuperclass();
 		}
 		Map<String, List<List<Object>>> objects = current.getObjects();
 		objects.forEach((key, vals) -> {
@@ -449,14 +486,5 @@ public class RVParameters {
 			return false;
 		}
 		return true;
-	}
-
-	public static void main(String[] args) throws IOException {
-		File test = new File("parameters.txt");
-		RVCarParameters param = new RVCarParameters(RVParameters.fromFile(test).getRoot());
-		param.decode();
-		logger.log(Level.INFO, "Name: {0}", param.getName());
-		logger.log(Level.INFO, "Model: {0}", param.getWheels()[1].getModelNum());
-		logger.log(Level.INFO, "Model0: {0}", param.getModels()[0]);
 	}
 }
